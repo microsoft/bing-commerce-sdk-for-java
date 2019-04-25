@@ -1,4 +1,4 @@
-package com.microsoft.bing.retailsearch.search.responses;
+package com.microsoft.bing.retailsearch.common.responses;
 
 public class Error {
     private String code;

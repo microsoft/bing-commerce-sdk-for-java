@@ -2,20 +2,21 @@ package com.microsoft.bing.retailsearch.search.requests;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
+import java.util.UUID;
 
 public class SearchRequest {
     @JsonIgnore
-    private String index;
+    private UUID indexId;
     private Query query;
     private Items items;
     private List<AggregationBase> aggregations;
 
-    public String getIndex() {
-        return this.index;
+    public UUID getIndexId() {
+        return this.indexId;
     }
 
-    public SearchRequest setIndex(String index) {
-        this.index = index;
+    public SearchRequest setIndex(UUID indexId) {
+        this.indexId = indexId;
         return this;
     }
 

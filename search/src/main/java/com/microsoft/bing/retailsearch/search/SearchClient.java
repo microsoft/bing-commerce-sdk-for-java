@@ -2,70 +2,88 @@ package com.microsoft.bing.retailsearch.search;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.microsoft.bing.retailsearch.common.ResponseListener;
+import com.microsoft.bing.retailsearch.common.RetailSearchClient;
+import com.microsoft.bing.retailsearch.common.RetailSearchClientBuilder;
+import com.microsoft.bing.retailsearch.common.requests.Request;
+import com.microsoft.bing.retailsearch.common.requests.Request.RequestMethod;
+import com.microsoft.bing.retailsearch.common.responses.Response;
 import com.microsoft.bing.retailsearch.search.requests.SearchRequest;
 import com.microsoft.bing.retailsearch.search.responses.SearchResponse;
 import java.io.Closeable;
 import java.io.IOException;
-import java.net.URI;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.utils.URIBuilder;
+import java.io.InvalidObjectException;
+import java.net.URISyntaxException;
+import java.util.concurrent.ExecutionException;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 
 public class SearchClient implements Closeable {
     // TODO: change to url for SDK api
     private static final String URL_FORMAT
         = "https://www.bingapis.com/api/retailsearch/api/v1/retail/%s/search";
-    private static final String APPID_PARAMETER_NAME = "appId";
-    private static final String CONTENT_TYPE_HEADER_NAME = "content-type";
-    private static final String APPLICATION_JSON_CONTENT_TYPE = "application/json";
     private static final String TENANTID_HEADER_NAME = "tenantId";
-    private static final String SUBSCRIPTIONID_HEADER_NAME = "subscriptionId";
 
     private final ObjectMapper mapper;
-    private final CloseableHttpAsyncClient client;
-    private final String appId;
-    private final String subscriptionId;
+    private final RetailSearchClient client;
     private final String tenantId;
 
-    SearchClient(CloseableHttpAsyncClient client, String appId, String subscriptionId, String tenantId) {
+    SearchClient(RetailSearchClientBuilder clientBuilder, String defaultTenantId) {
         this.mapper = new ObjectMapper()
             .setSerializationInclusion(Include.NON_NULL);
 
-        this.client = client;
-        this.appId = appId;
-        this.subscriptionId = subscriptionId;
-        this.tenantId = tenantId;
+        this.client = clientBuilder.build();
+        this.tenantId = defaultTenantId;
     }
 
-    public final SearchResponse search(SearchRequest searchRequest) throws Exception {
-        URI uri = new URIBuilder(String.format(URL_FORMAT, searchRequest.getIndex()))
-            .addParameter(APPID_PARAMETER_NAME, this.appId)
-            .build();
-
-        HttpPost request = new HttpPost(uri);
-        request.setHeader(CONTENT_TYPE_HEADER_NAME, APPLICATION_JSON_CONTENT_TYPE);
-        request.setHeader(TENANTID_HEADER_NAME, this.tenantId);
-        if (this.subscriptionId != null && this.subscriptionId.trim().length() > 0) {
-            request.setHeader(SUBSCRIPTIONID_HEADER_NAME, this.subscriptionId);
-        }
-
-        String jsonBody = this.mapper.writeValueAsString(searchRequest);
-        request.setEntity(new StringEntity(jsonBody));
-
-        HttpResponse httpResponse = this.client.execute(request, null).get();
-        SearchResponse searchResponse = SearchResponse.fromHttpResponse(httpResponse);
+    public final SearchResponse search(SearchRequest searchRequest)
+        throws URISyntaxException, ExecutionException, InterruptedException, IOException  {
+        Request request = this.createRequest(searchRequest);
+        Response response = this.client.performRequest(request);
+        SearchResponse searchResponse = response.mapToApiResponse(SearchResponse.class);
 
         return searchResponse;
     }
 
-    public final void searchAsync(SearchRequest searchRequest) {
-        return;
+    public final void searchAsync(SearchRequest searchRequest, final ResponseListener<SearchResponse> responseListener) {
+        try {
+            Request request = this.createRequest(searchRequest);
+            this.client.performRequestAsync(request, new ResponseListener<Response>() {
+                public void onSuccess(Response response) {
+                    if (!response.isErrorResponse()) {
+                        try {
+                            SearchResponse searchResponse = response.mapToApiResponse(SearchResponse.class);
+                            responseListener.onSuccess(searchResponse);
+                        } catch (IOException e) {
+                            responseListener.onFailure(e);
+                        }
+                    }
+                }
+
+                public void onFailure(Exception e) {
+                    responseListener.onFailure(e);
+                }
+            });
+        } catch (Exception e) {
+            responseListener.onFailure(e);
+        }
     }
 
     public void close() throws IOException {
         this.client.close();
+    }
+
+    private Request createRequest(SearchRequest searchRequest) throws InvalidObjectException {
+        String endpoint = String.format(URL_FORMAT, searchRequest.getIndexId());
+        Request request = new Request(RequestMethod.POST, endpoint);
+        request.addHeader(TENANTID_HEADER_NAME, this.tenantId);
+
+        try {
+            String jsonBody = this.mapper.writeValueAsString(searchRequest);
+            request.setEntity(new StringEntity(jsonBody));
+        } catch (Exception e) {
+            throw new InvalidObjectException("Error serializing the SearchRequest");
+        }
+
+        return request;
     }
 }
