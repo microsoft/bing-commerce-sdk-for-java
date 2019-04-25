@@ -14,6 +14,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.net.URISyntaxException;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import org.apache.http.entity.StringEntity;
 
@@ -25,9 +26,9 @@ public class SearchClient implements Closeable {
 
     private final ObjectMapper mapper;
     private final RetailSearchClient client;
-    private final String tenantId;
+    private final UUID tenantId;
 
-    SearchClient(RetailSearchClientBuilder clientBuilder, String defaultTenantId) {
+    SearchClient(RetailSearchClientBuilder clientBuilder, UUID defaultTenantId) {
         this.mapper = new ObjectMapper()
             .setSerializationInclusion(Include.NON_NULL);
 
@@ -75,7 +76,7 @@ public class SearchClient implements Closeable {
     private Request createRequest(SearchRequest searchRequest) throws InvalidObjectException {
         String endpoint = String.format(URL_FORMAT, searchRequest.getIndexId());
         Request request = new Request(RequestMethod.POST, endpoint);
-        request.addHeader(TENANTID_HEADER_NAME, this.tenantId);
+        request.addHeader(TENANTID_HEADER_NAME, this.tenantId.toString());
 
         try {
             String jsonBody = this.mapper.writeValueAsString(searchRequest);
