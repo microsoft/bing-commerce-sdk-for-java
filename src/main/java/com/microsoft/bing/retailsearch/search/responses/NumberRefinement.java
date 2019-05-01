@@ -8,7 +8,10 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     property = "_type",
     defaultImpl = NumberRefinement.class)
 public class NumberRefinement extends RefinementBase {
+
     private Double value;
 
-    public Double getValue() { return this.value; }
+    public Double getValue() {
+        return this.value;
+    }
 }

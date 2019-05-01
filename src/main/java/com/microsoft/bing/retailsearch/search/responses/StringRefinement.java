@@ -8,7 +8,10 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     property = "_type",
     defaultImpl = StringRefinement.class)
 public class StringRefinement extends RefinementBase {
+
     private String value;
 
-    public String getValue() { return this.value; }
+    public String getValue() {
+        return this.value;
+    }
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class ResponseException extends IOException {
+
     private final Response response;
     private ErrorResponse errorResponse;
 
@@ -18,7 +19,9 @@ public class ResponseException extends IOException {
         }
     }
 
-    public Response getResponse() { return this.response; }
+    public Response getResponse() {
+        return this.response;
+    }
 
     public List<Error> getErrors() {
         if (this.errorResponse != null) {

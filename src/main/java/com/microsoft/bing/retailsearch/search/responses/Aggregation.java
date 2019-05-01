@@ -14,16 +14,23 @@ import java.util.List;
     @JsonSubTypes.Type(value = BooleanFacet.class, name = "BoolFacet"),
     @JsonSubTypes.Type(value = NumberFacet.class, name = "NumberFacet"),
     @JsonSubTypes.Type(value = RangeFacet.class, name = "RangeFacet"),
-    @JsonSubTypes.Type(value = StringFacet.class, name = "StringFacet") }
+    @JsonSubTypes.Type(value = StringFacet.class, name = "StringFacet")}
 )
 public class Aggregation {
+
     private String name;
     private Integer estimatedCount;
     private List<Aggregation> aggregations;
 
-    public String getName() { return this.name; }
+    public String getName() {
+        return this.name;
+    }
 
-    public Integer getEstimatedCount() { return this.estimatedCount; }
+    public Integer getEstimatedCount() {
+        return this.estimatedCount;
+    }
 
-    public List<Aggregation> getAggregations() { return this.aggregations; }
+    public List<Aggregation> getAggregations() {
+        return this.aggregations;
+    }
 }

@@ -8,10 +8,15 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     property = "_type",
     defaultImpl = RangeRefinement.class)
 public class RangeRefinement extends RefinementBase {
+
     private Double min;
     private Double max;
 
-    public Double getMin() { return this.min; }
+    public Double getMin() {
+        return this.min;
+    }
 
-    public Double getMax() { return this.max; }
+    public Double getMax() {
+        return this.max;
+    }
 }

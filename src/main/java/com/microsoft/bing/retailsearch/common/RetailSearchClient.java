@@ -19,6 +19,7 @@ import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 
 public class RetailSearchClient implements Closeable {
+
     private static final String APPID_PARAMETER_NAME = "appId";
     private static final String CONTENT_TYPE_HEADER_NAME = "content-type";
     private static final String APPLICATION_JSON_CONTENT_TYPE = "application/json";
@@ -48,7 +49,8 @@ public class RetailSearchClient implements Closeable {
         return response;
     }
 
-    public void performRequestAsync(Request request, final ResponseListener<Response> responseListener) {
+    public void performRequestAsync(Request request,
+        final ResponseListener<Response> responseListener) {
         try {
             HttpRequestBase httpRequest = this.createHttpRequest(request);
             this.client.execute(httpRequest, new FutureCallback<HttpResponse>() {
@@ -67,7 +69,8 @@ public class RetailSearchClient implements Closeable {
                 }
 
                 public void cancelled() {
-                    responseListener.onFailure(new ExecutionException("Request was cancelled", null));
+                    responseListener
+                        .onFailure(new ExecutionException("Request was cancelled", null));
                 }
             });
         } catch (Exception e) {
@@ -101,7 +104,8 @@ public class RetailSearchClient implements Closeable {
                 httpRequest = httpPostRequest;
                 break;
             default:
-                throw new UnsupportedOperationException("Http method not supported: " + requestMethod.toString());
+                throw new UnsupportedOperationException(
+                    "Http method not supported: " + requestMethod.toString());
         }
 
         if (this.subscriptionId != null && this.subscriptionId.trim().length() > 0) {

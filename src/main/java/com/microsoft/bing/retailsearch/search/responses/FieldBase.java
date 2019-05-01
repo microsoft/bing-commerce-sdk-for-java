@@ -7,10 +7,13 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonSubTypes({
     @JsonSubTypes.Type(value = BooleanField.class, name = "BoolField"),
     @JsonSubTypes.Type(value = NumericField.class, name = "NumericField"),
-    @JsonSubTypes.Type(value = StringField.class, name = "StringField") }
+    @JsonSubTypes.Type(value = StringField.class, name = "StringField")}
 )
 public abstract class FieldBase {
+
     private String name;
 
-    public String getName() { return this.name; }
+    public String getName() {
+        return this.name;
+    }
 }

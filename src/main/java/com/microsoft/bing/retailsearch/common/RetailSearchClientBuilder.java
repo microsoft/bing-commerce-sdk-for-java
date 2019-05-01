@@ -5,6 +5,7 @@ import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 
 public final class RetailSearchClientBuilder {
+
     private static final int DEFAULT_CONNECTION_TIMEOUT_MS = 1000;
     private static final int DEFAULT_SOCKET_TIMEOUT_MS = 5000;
 

@@ -19,6 +19,7 @@ import java.util.concurrent.ExecutionException;
 import org.apache.http.entity.StringEntity;
 
 public class SearchClient implements Closeable {
+
     // TODO: change to external url for api
     private static final String URL_FORMAT
         = "https://retailsearch.asgfalcon-test.io/api/v1/retail/%s/search";
@@ -37,7 +38,7 @@ public class SearchClient implements Closeable {
     }
 
     public final SearchResponse search(SearchRequest searchRequest)
-        throws URISyntaxException, ExecutionException, InterruptedException, IOException  {
+        throws URISyntaxException, ExecutionException, InterruptedException, IOException {
         Request request = this.createRequest(searchRequest);
         Response response = this.client.performRequest(request);
         SearchResponse searchResponse = response.mapToApiResponse(SearchResponse.class);
@@ -45,14 +46,16 @@ public class SearchClient implements Closeable {
         return searchResponse;
     }
 
-    public final void searchAsync(SearchRequest searchRequest, final ResponseListener<SearchResponse> responseListener) {
+    public final void searchAsync(SearchRequest searchRequest,
+        final ResponseListener<SearchResponse> responseListener) {
         try {
             Request request = this.createRequest(searchRequest);
             this.client.performRequestAsync(request, new ResponseListener<Response>() {
                 public void onSuccess(Response response) {
                     if (!response.isErrorResponse()) {
                         try {
-                            SearchResponse searchResponse = response.mapToApiResponse(SearchResponse.class);
+                            SearchResponse searchResponse = response
+                                .mapToApiResponse(SearchResponse.class);
                             responseListener.onSuccess(searchResponse);
                         } catch (IOException e) {
                             responseListener.onFailure(e);
