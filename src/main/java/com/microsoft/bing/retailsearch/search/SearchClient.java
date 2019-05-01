@@ -19,9 +19,9 @@ import java.util.concurrent.ExecutionException;
 import org.apache.http.entity.StringEntity;
 
 public class SearchClient implements Closeable {
-    // TODO: change to url for SDK api
+    // TODO: change to external url for api
     private static final String URL_FORMAT
-        = "https://www.bingapis.com/api/retailsearch/api/v1/retail/%s/search";
+        = "https://retailsearch.asgfalcon-test.io/api/v1/retail/%s/search";
     private static final String TENANTID_HEADER_NAME = "tenantId";
 
     private final ObjectMapper mapper;
@@ -75,8 +75,14 @@ public class SearchClient implements Closeable {
 
     private Request createRequest(SearchRequest searchRequest) throws InvalidObjectException {
         String endpoint = String.format(URL_FORMAT, searchRequest.getIndexId());
+
+        // TODO: support GET requests
+
         Request request = new Request(RequestMethod.POST, endpoint);
         request.addHeader(TENANTID_HEADER_NAME, this.tenantId.toString());
+
+        // TODO: remove after switching to prod endpoint
+        request.addParameter("traffictype", "test");
 
         try {
             String jsonBody = this.mapper.writeValueAsString(searchRequest);
