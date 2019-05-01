@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     property = "_type",
     defaultImpl = BooleanRefinement.class)
 public class BooleanRefinement extends RefinementBase {
-    private boolean value;
+    private Boolean value;
 
-    public boolean getValue() { return this.value; }
+    public Boolean getValue() { return this.value; }
 }

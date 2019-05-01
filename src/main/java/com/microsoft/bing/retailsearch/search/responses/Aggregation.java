@@ -18,12 +18,12 @@ import java.util.List;
 )
 public class Aggregation {
     private String name;
-    private int estimatedCount;
+    private Integer estimatedCount;
     private List<Aggregation> aggregations;
 
     public String getName() { return this.name; }
 
-    public int getEstimatedCount() { return this.estimatedCount; }
+    public Integer getEstimatedCount() { return this.estimatedCount; }
 
     public List<Aggregation> getAggregations() { return this.aggregations; }
 }
