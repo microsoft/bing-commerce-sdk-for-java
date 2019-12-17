@@ -1,0 +1,39 @@
+trigger:
+  - master
+
+variables:
+   LoggingOptions: '-Dorg.slf4j.simpleLogger.defaultLogLevel=error -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn'
+
+Jobs:
+- job: 'search'
+
+  pool:
+    vmImage: 'windows-2019'
+
+  steps:
+  - task: Maven@3
+    inputs:
+      mavenPomFile: 'src/search/pom.xml'
+      mavenOptions: '-Xmx3072m'
+      JavaHomeOption: 'JDKVersion'
+      JdkVersionOption: '1.11'
+      jdkArchitectureOption: 'x64'
+      publishJUnitResults: false
+      testResultsFiles: '**/surefire-reports/TEST-*.xml'
+      goals: 'package'
+
+- job: 'ingestion'
+
+  pool:
+    vmImage: 'windows-2019'
+
+  steps:
+  - task: Maven@3
+    inputs:
+      mavenPomFile: 'src/ingestion/pom.xml'
+      mavenOptions: '-Xmx3072m'
+      JavaHomeOption: 'JDKVersion'
+      JdkVersionOption: '1.11'
+      jdkArchitectureOption: 'x64'
+      publishJUnitResults: false
+      goals: 'package'
