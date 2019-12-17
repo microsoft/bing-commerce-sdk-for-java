@@ -1,7 +1,5 @@
 package com.microsoft.bing.ecommerce.search;
 
-import com.microsoft.bing.ecommerce.search.implementation.BingECommerceSearchImpl;
-
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Arrays;
@@ -16,19 +14,20 @@ import okhttp3.Request;
 import okhttp3.Response;
 import retrofit2.Retrofit;
 
+import com.microsoft.bing.ecommerce.search.implementation.BingECommerceSearchImpl;
 import com.microsoft.bing.ecommerce.search.models.ECommerceSearchPostRequest;
 import com.microsoft.bing.ecommerce.search.models.ECommerceSearchResponse;
-import com.microsoft.bing.ecommerce.search.util.AppIdCredentialsInterceptor;
 import com.microsoft.bing.ecommerce.search.models.RequestQuery;
 import com.microsoft.bing.ecommerce.search.models.ResponseDiscoveredFacets;
 import com.microsoft.bing.ecommerce.search.models.ResponseItems;
 import com.microsoft.bing.ecommerce.search.models.RequestItems;
 import com.microsoft.bing.ecommerce.search.models.RequestDiscoverFacets;
+import com.microsoft.bing.ecommerce.search.util.AppIdCredentialsInterceptor;
+
 /**
  * Unit test for simple App.
  */
-public class AppTest 
-    extends TestCase
+public class AppTest extends TestCase
 {
     private final static String TenantId = System.getenv("SEARCH_TENANT");
     private final static String IndexId = System.getenv("SEARCH_INDEX");

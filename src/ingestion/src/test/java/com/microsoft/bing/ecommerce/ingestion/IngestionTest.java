@@ -1,14 +1,9 @@
-package com.microsoft.bing.ecommerce.ingestion.ingestion;
-
-import com.microsoft.bing.ecommerce.ingestion.BingECommerceIngestion;
-import com.microsoft.bing.ecommerce.ingestion.implementation.BingECommerceIngestionImpl;
+package com.microsoft.bing.ecommerce.ingestion;
 
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Arrays;
 
-import com.microsoft.bing.ecommerce.ingestion.models.*;
-import com.microsoft.bing.ecommerce.ingestion.util.AppIdCredentialsInterceptor;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -19,12 +14,17 @@ import okhttp3.Request;
 import okhttp3.Response;
 import retrofit2.Retrofit;
 
+import com.microsoft.bing.ecommerce.ingestion.BingECommerceIngestion;
+import com.microsoft.bing.ecommerce.ingestion.implementation.BingECommerceIngestionImpl;
+import com.microsoft.bing.ecommerce.ingestion.models.*;
+import com.microsoft.bing.ecommerce.ingestion.util.AppIdCredentialsInterceptor;
+
 /**
  * Unit test for bing industry ingestion sdk
  */
-public class IngestionTests extends TestCase
+public class IngestionTest extends TestCase
 {
-    private final static String TENANT_ID =  = System.getenv("INGEST_TENANT");
+    private final static String TENANT_ID = System.getenv("INGEST_TENANT");
     private final static String TEST_INDEX_NAME = "testIndex01234";
 
     /**
@@ -32,7 +32,7 @@ public class IngestionTests extends TestCase
      *
      * @param testName name of the test case
      */
-    public IngestionTests( String testName )
+    public IngestionTest( String testName )
     {
         super( testName );
     }
@@ -42,7 +42,7 @@ public class IngestionTests extends TestCase
      */
     public static Test suite()
     {
-        return new TestSuite( IngestionTests.class );
+        return new TestSuite( IngestionTest.class );
     }
 
     @Override
