@@ -14,13 +14,15 @@ jobs:
   - task: Maven@3
     inputs:
       mavenPomFile: 'src/search/pom.xml'
-      mavenOptions: '-Xmx3072m'
-      JavaHomeOption: 'JDKVersion'
-      JdkVersionOption: '1.11'
-      jdkArchitectureOption: 'x64'
-      publishJUnitResults: false
+      publishJUnitResults: true
       testResultsFiles: '**/surefire-reports/TEST-*.xml'
-      goals: 'package'
+      testRunTitle: 'Search'
+      javaHomeOption: 'JDKVersion'
+      mavenVersionOption: 'Default'
+      mavenOptions: '-Xmx3072m'
+      mavenAuthenticateFeed: false
+      effectivePomSkip: false
+      sonarQubeRunAnalysis: false
 
 - job: 'ingestion'
 
@@ -31,9 +33,12 @@ jobs:
   - task: Maven@3
     inputs:
       mavenPomFile: 'src/ingestion/pom.xml'
+      publishJUnitResults: true
+      testResultsFiles: '**/surefire-reports/TEST-*.xml'
+      testRunTitle: 'Ingestion'
+      javaHomeOption: 'JDKVersion'
+      mavenVersionOption: 'Default'
       mavenOptions: '-Xmx3072m'
-      JavaHomeOption: 'JDKVersion'
-      JdkVersionOption: '1.11'
-      jdkArchitectureOption: 'x64'
-      publishJUnitResults: false
-      goals: 'package'
+      mavenAuthenticateFeed: false
+      effectivePomSkip: false
+      sonarQubeRunAnalysis: false
