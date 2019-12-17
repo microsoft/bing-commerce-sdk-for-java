@@ -23,5 +23,10 @@
 hs_err_pid*
 
 
-# Java related
+# Java targets and ide
 target/
+.idea/
+.settings/
+.classpath
+.factorypath
+.project
