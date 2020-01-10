@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.microsoft.bing</groupId>
-  <artifactId>bing-ecommerce-samples</artifactId>
+  <artifactId>bing-commerce-samples</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>bing-ecommerce-samples</name>
+  <name>bing-commerce-samples</name>
   <url>http://maven.apache.org</url>
 
   <properties>

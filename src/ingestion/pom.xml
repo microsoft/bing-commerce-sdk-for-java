@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.microsoft.bing</groupId>
-  <artifactId>bing-ecommerce-ingestion</artifactId>
+  <artifactId>bing-commerce-ingestion</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>bingecommerce</name>
+  <name>bingcommerce</name>
   <url>http://www.microsoft.com</url>
 
   <properties>

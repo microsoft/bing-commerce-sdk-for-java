@@ -3,19 +3,16 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.microsoft.bing</groupId>
-  <artifactId>bing-ecommerce-search</artifactId>
+  <artifactId>bing-commerce-search</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>bingecommerce</name>
+  <name>bingcommerce</name>
   <url>http://www.microsoft.com</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.6</maven.compiler.source>
-    <maven.compiler.target>1.6</maven.compiler.target>
   </properties>
-
 
   <dependencies>
     <dependency>
