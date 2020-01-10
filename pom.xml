@@ -3,15 +3,17 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.microsoft.bing</groupId>
-  <artifactId>bing-commerce-search</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <artifactId>bing-commerce-samples</artifactId>
+  <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>bingcommerce</name>
-  <url>http://www.microsoft.com</url>
+  <name>bing-commerce-samples</name>
+  <url>http://maven.apache.org</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
   <dependencies>
@@ -53,4 +55,39 @@
       <scope>runtime</scope>
     </dependency>
   </dependencies>
+
+  <build>
+    <sourceDirectory>samples/java</sourceDirectory>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>src/search/src/main/java</source>
+                <source>src/ingestion/src/main/java</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>
