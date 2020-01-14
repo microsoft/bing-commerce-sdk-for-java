@@ -30,3 +30,4 @@ target/
 .classpath
 .factorypath
 .project
+*.iml

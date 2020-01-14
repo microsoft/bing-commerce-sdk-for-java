@@ -1,13 +1,13 @@
 package com.microsoft.bing.commerce.samples;
 
-import java.io.IOException;
-import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.microsoft.bing.commerce.search.models.*;
+import com.microsoft.bing.commerce.search.util.AccessTokenInterceptor;
+import com.microsoft.bing.commerce.search.util.AccessTokenProvider;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 
@@ -16,7 +16,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.bing.commerce.ingestion.BingCommerceIngestion;
 import com.microsoft.bing.commerce.ingestion.implementation.BingCommerceIngestionImpl;
 import com.microsoft.bing.commerce.ingestion.models.*;
-import com.microsoft.bing.commerce.ingestion.util.AppIdCredentialsInterceptor;
 
 import com.microsoft.bing.commerce.search.BingCommerceSearch;
 import com.microsoft.bing.commerce.search.implementation.BingCommerceSearchImpl;
@@ -28,7 +27,7 @@ import com.microsoft.bing.commerce.search.implementation.BingCommerceSearchImpl;
 public class App 
 {
     private final static String TENANT_ID = System.getenv("TENANT_ID");
-    private final static String APPID = System.getenv("APPID");
+    private final static String ACCESS_TOKEN = System.getenv("ACCESS_TOKEN");
     private final static String INDEX_NAME = "SampleIndex";
 
     public static void main( String[] args ) throws JsonProcessingException {
@@ -41,8 +40,8 @@ public class App
         // Push some data
         System.out.println("Pushing JSONArray data.");
         List<MyProduct> products = Arrays.asList(
-            new MyProduct("1", "My First Product", "The first product I have", 100.0, "random text", 52.4),
-            new MyProduct("2", "My Second Product", "The second product I have", 10.0, "another random text", 88.8)
+            new MyProduct("1", "My First Product", "The first product I have", 100.0, "http://commerce.bing.com/1","random text", 52.4),
+            new MyProduct("2", "My Second Product", "The second product I have", 10.0, "http://commerce.bing.com/2","another random text", 88.8)
         );
         pushData(ingestionClient, indexId, createJSON(products));
 
@@ -64,20 +63,20 @@ public class App
     }
 
     private static BingCommerceIngestion createIngestionClient() {
-        System.out.format("Creating the ingestion client with appid: %s.\n", APPID);
+        System.out.format("Creating the ingestion client with access token %s.\n", ACCESS_TOKEN);
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
-                .addInterceptor(new AppIdCredentialsInterceptor( APPID ));
+                .addInterceptor(new AccessTokenInterceptor( new SimpleAccessTokenProvider(ACCESS_TOKEN) ));
         Retrofit.Builder retrofit = new Retrofit.Builder();
 
         return new BingCommerceIngestionImpl(httpClient, retrofit);
     }
 
     private static BingCommerceSearch createSearchClient() {
-        System.out.format("Creating the search client with appid: %s.\n", APPID);
+        System.out.format("Creating the search client with access token: %s.\n", ACCESS_TOKEN);
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
-                .addInterceptor(new AppIdCredentialsInterceptor( APPID ));
+                .addInterceptor(new AccessTokenInterceptor( new SimpleAccessTokenProvider(ACCESS_TOKEN) ));
         Retrofit.Builder retrofit = new Retrofit.Builder();
 
         return new BingCommerceSearchImpl(httpClient, retrofit);
@@ -154,7 +153,7 @@ public class App
     private static String createCSV(List<MyProduct> products) {
         List<String> lines = new ArrayList<String>();
         for (MyProduct product : products) {
-            String line = product.ProductId + "," + product.ProductTitle + ","+ product.ProductDescription + ","+ product.ProductPrice.toString() + "," + product.arbitraryText + "," + product.arbitraryNumber.toString();
+            String line = product.ProductId + "," + product.ProductTitle + ","+ product.ProductDescription + ","+ product.ProductPrice.toString() + "," + product.ProductDetailsUrl + "," + product.ArbitraryText + "," + product.ArbitraryNumber.toString();
             lines.add(line);
         }
 
@@ -186,4 +185,20 @@ public class App
         return response.items().totalEstimatedMatches();
     }
 
+}
+
+class SimpleAccessTokenProvider implements AccessTokenProvider
+{
+    private final String token;
+    public SimpleAccessTokenProvider(final String token) {
+        this.token = token;
+    }
+
+    public String getAccessToken() {
+        return token;
+    }
+
+    public String refreshAccessToken() {
+        return null;
+    }
 }

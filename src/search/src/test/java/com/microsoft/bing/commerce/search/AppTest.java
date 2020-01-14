@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Arrays;
 
+import com.microsoft.bing.commerce.search.util.AccessTokenProvider;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -22,7 +23,7 @@ import com.microsoft.bing.commerce.search.models.ResponseDiscoveredFacets;
 import com.microsoft.bing.commerce.search.models.ResponseItems;
 import com.microsoft.bing.commerce.search.models.RequestItems;
 import com.microsoft.bing.commerce.search.models.RequestDiscoverFacets;
-import com.microsoft.bing.commerce.search.util.AppIdCredentialsInterceptor;
+import com.microsoft.bing.commerce.search.util.AccessTokenInterceptor;
 /**
 * Unit test for simple App.
 */
@@ -30,6 +31,8 @@ public class AppTest extends TestCase {
 
    private final static String TenantId = System.getenv("SEARCH_TENANT");
    private final static String IndexId = System.getenv("SEARCH_INDEX");
+   private final static String AccessToken = System.getenv("SEARCH_TOKEN");
+
     /**
      * Create the test case
      *
@@ -54,7 +57,7 @@ public class AppTest extends TestCase {
     public void testApp() throws Exception
     {
     	OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
-    			.addInterceptor(new AppIdCredentialsInterceptor( System.getenv("SEARCH_APPID") ))
+    			.addInterceptor(new AccessTokenInterceptor( new TestAccessTokenProvider(AccessToken) ))
     			.addInterceptor(new TestTrafficInterceptor(System.out));
     	Retrofit.Builder retrofit = new Retrofit.Builder();
 
@@ -104,5 +107,21 @@ public class AppTest extends TestCase {
     		
     		return chain.proceed(modifiedRequest);    		
     	}
+    }
+
+    public class TestAccessTokenProvider implements AccessTokenProvider {
+
+        private final String token;
+        public TestAccessTokenProvider(final String token) {
+            this.token = token;
+        }
+
+        public String getAccessToken() {
+            return token;
+        }
+
+        public String refreshAccessToken() {
+            return null;
+        }
     }
 }

@@ -4,15 +4,23 @@
 
   <groupId>com.microsoft.bing</groupId>
   <artifactId>bing-commerce-search</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>jar</packaging>
 
-  <name>bingcommerce</name>
-  <url>http://www.microsoft.com</url>
+  <name>Microsoft Bing for Commerce Search SDK</name>
+  <url>http://commerce.bing.com</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
   <dependencies>
     <dependency>

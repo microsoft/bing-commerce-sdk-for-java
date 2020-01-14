@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Arrays;
 
+import com.microsoft.bing.commerce.ingestion.util.AccessTokenInterceptor;
+import com.microsoft.bing.commerce.ingestion.util.AccessTokenProvider;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -17,7 +19,6 @@ import retrofit2.Retrofit;
 import com.microsoft.bing.commerce.ingestion.BingCommerceIngestion;
 import com.microsoft.bing.commerce.ingestion.implementation.BingCommerceIngestionImpl;
 import com.microsoft.bing.commerce.ingestion.models.*;
-import com.microsoft.bing.commerce.ingestion.util.AppIdCredentialsInterceptor;
 
 /**
  * Unit test for bing industry ingestion sdk
@@ -25,8 +26,8 @@ import com.microsoft.bing.commerce.ingestion.util.AppIdCredentialsInterceptor;
 public class IngestionTest extends TestCase
 {
     private final static String TENANT_ID = System.getenv("INGEST_TENANT");
+    private final static String ACCESS_TOKEN = System.getenv("INGEST_TOKEN");
     private final static String TEST_INDEX_NAME = "testIndex01234";
-
     /**
      * Create the test case
      *
@@ -131,7 +132,7 @@ public class IngestionTest extends TestCase
     private BingCommerceIngestion createClient()
     {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
-                .addInterceptor(new AppIdCredentialsInterceptor( System.getenv("INGEST_APPID") ))
+                .addInterceptor(new AccessTokenInterceptor( new TestAccessTokenProvider(ACCESS_TOKEN) ))
                 .addInterceptor(new TestTrafficInterceptor(System.out));
         Retrofit.Builder retrofit = new Retrofit.Builder();
 
@@ -185,4 +186,21 @@ public class IngestionTest extends TestCase
             return r;
         }
     }
+
+    public class TestAccessTokenProvider implements AccessTokenProvider
+    {
+        private final String token;
+        public TestAccessTokenProvider(final String token) {
+            this.token = token;
+        }
+
+        public String getAccessToken() {
+            return token;
+        }
+
+        public String refreshAccessToken() {
+            return null;
+        }
+    }
+
 }
