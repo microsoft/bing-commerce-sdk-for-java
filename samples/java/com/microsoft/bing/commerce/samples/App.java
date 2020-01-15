@@ -197,8 +197,4 @@ class SimpleAccessTokenProvider implements AccessTokenProvider
     public String getAccessToken() {
         return token;
     }
-
-    public String refreshAccessToken() {
-        return null;
-    }
 }

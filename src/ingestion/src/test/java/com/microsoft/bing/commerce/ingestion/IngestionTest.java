@@ -197,10 +197,6 @@ public class IngestionTest extends TestCase
         public String getAccessToken() {
             return token;
         }
-
-        public String refreshAccessToken() {
-            return null;
-        }
     }
 
 }
