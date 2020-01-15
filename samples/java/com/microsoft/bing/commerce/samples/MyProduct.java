@@ -5,15 +5,17 @@ class MyProduct {
     public String ProductTitle;
     public String ProductDescription;
     public Double ProductPrice;
-    public String arbitraryText;
-    public Double arbitraryNumber;
+    public String ProductDetailsUrl;
+    public String ArbitraryText;
+    public Double ArbitraryNumber;
 
-    public MyProduct(String id, String title, String desc, Double price, String text, Double number) {
+    public MyProduct(String id, String title, String desc, Double price, String url, String text, Double number) {
         ProductId = id;
         ProductTitle = title;
         ProductDescription = desc;
         ProductPrice = price;
-        arbitraryText = text;
-        arbitraryNumber = number;
+        ProductDescription = url;
+        ArbitraryText = text;
+        ArbitraryNumber = number;
     }
 }
