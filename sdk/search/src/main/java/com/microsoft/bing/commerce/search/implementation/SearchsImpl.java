@@ -259,7 +259,7 @@ public class SearchsImpl implements Searchs {
      * @param q The query to match against all eligible fields.
      * @param tenant the String value
      * @param index the String value
-     * @param mkt The market where the results come from. Thypically, `mkt` is the country where the user is making the request from.
+     * @param mkt The market where the results come from. Typically, `mkt` is the country where the user is making the request from.
      * @param setlang The language to use for user interface strings. You may specify the language using either a 2-letter or 4-letter code. Using 4-letter codes is preferred.
      * @param select A comma-separated list of fields to return. unspecified or empty to select only _itemId, or `*` to select all fields.
      * @param orderby A comma-separated list of OData order syntax expressions.
@@ -285,7 +285,7 @@ public class SearchsImpl implements Searchs {
      * @param q The query to match against all eligible fields.
      * @param tenant the String value
      * @param index the String value
-     * @param mkt The market where the results come from. Thypically, `mkt` is the country where the user is making the request from.
+     * @param mkt The market where the results come from. Typically, `mkt` is the country where the user is making the request from.
      * @param setlang The language to use for user interface strings. You may specify the language using either a 2-letter or 4-letter code. Using 4-letter codes is preferred.
      * @param select A comma-separated list of fields to return. unspecified or empty to select only _itemId, or `*` to select all fields.
      * @param orderby A comma-separated list of OData order syntax expressions.
@@ -310,7 +310,7 @@ public class SearchsImpl implements Searchs {
      * @param q The query to match against all eligible fields.
      * @param tenant the String value
      * @param index the String value
-     * @param mkt The market where the results come from. Thypically, `mkt` is the country where the user is making the request from.
+     * @param mkt The market where the results come from. Typically, `mkt` is the country where the user is making the request from.
      * @param setlang The language to use for user interface strings. You may specify the language using either a 2-letter or 4-letter code. Using 4-letter codes is preferred.
      * @param select A comma-separated list of fields to return. unspecified or empty to select only _itemId, or `*` to select all fields.
      * @param orderby A comma-separated list of OData order syntax expressions.
@@ -339,7 +339,7 @@ public class SearchsImpl implements Searchs {
      * @param q The query to match against all eligible fields.
      * @param tenant the String value
      * @param index the String value
-     * @param mkt The market where the results come from. Thypically, `mkt` is the country where the user is making the request from.
+     * @param mkt The market where the results come from. Typically, `mkt` is the country where the user is making the request from.
      * @param setlang The language to use for user interface strings. You may specify the language using either a 2-letter or 4-letter code. Using 4-letter codes is preferred.
      * @param select A comma-separated list of fields to return. unspecified or empty to select only _itemId, or `*` to select all fields.
      * @param orderby A comma-separated list of OData order syntax expressions.
