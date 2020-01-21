@@ -65,8 +65,8 @@
             </goals>
             <configuration>
               <sources>
-                <source>src/search/src/main/java</source>
-                <source>src/ingestion/src/main/java</source>
+                <source>sdk/search/src/main/java</source>
+                <source>sdk/ingestion/src/main/java</source>
               </sources>
             </configuration>
           </execution>

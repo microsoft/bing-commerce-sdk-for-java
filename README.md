@@ -1,8 +1,34 @@
 
-# Bing Retail Search SDK for Java
+# Bing for Commerce Java SDK
+
+## Overview
+
+This contains the generated SDKs that can help developers integrate with Bing for Commerce platform, both on the Search and Ingestion sides. The repository also contains unit tests and samples that can show you quick examples for how to use the SDKs.
+
+For more details about the project, please refer to the [Bing for Commerce main repository](https://github.com/microsoft/bing-commerce), or [Bing for Commerce API Documentation](https://commerce.bing.com/docs/product-search/).
+
+## Getting Started
+
+### Prerequisites
+
+* [Java Development Kit (JDK) with version 8 or above](https://docs.microsoft.com/en-us/java/azure/jdk/java-jdk-install?view=azure-java-stable).
+* [Apache Maven](https://maven.apache.org/).
+* [Bing for Commerce Account](https://commerce.bing.com/).
+
+### Adding the package to your product
+
+Coming soon.
+
+### Authenticate the client
+
+Bing for Commerce APIs use Bearer Tokens for authentication. You can use the [Bing for Commerce Portal Documentation](https://commerce.bing.com/docs/Portal%20Documentation/#manage-keys-and-tokens) for help creating one.
+
+### Samples
+
+Please take a look at the [sample](./samples/) for a quick example for how to use the SDK in order to manage your indexes, push data to your index catalog and perform search queries on your data.
 
 
-# Contributing
+## Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
 Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
