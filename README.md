@@ -3,13 +3,13 @@
 
 ## Overview
 
-This contains the auto-generated SDKs that can help developers integrate with Bing for Commerce platform, both on the Search and Ingestion sides. The repository also contains unit tests and samples that can show you quick examples for how to use the sdks.
+This contains the generated SDKs that can help developers integrate with Bing for Commerce platform, both on the Search and Ingestion sides. The repository also contains unit tests and samples that can show you quick examples for how to use the SDKs.
 
-For more details about the proejct, please refer to the [Bing for Commerce main repository](https://github.com/microsoft/bing-commerce), or [Bing for Commerce API Documentation](https://commerce.bing.com/docs/product-search/).
+For more details about the project, please refer to the [Bing for Commerce main repository](https://github.com/microsoft/bing-commerce), or [Bing for Commerce API Documentation](https://commerce.bing.com/docs/product-search/).
 
 ## Getting Started
 
-### Prerequisits
+### Prerequisites
 
 * [Java Development Kit (JDK) with version 8 or above](https://docs.microsoft.com/en-us/java/azure/jdk/java-jdk-install?view=azure-java-stable).
 * [Apache Maven](https://maven.apache.org/).
@@ -17,7 +17,7 @@ For more details about the proejct, please refer to the [Bing for Commerce main 
 
 ### Adding the package to your product
 
-TBD - pending publishing the package on maven central.
+Coming soon.
 
 ### Authenticate the client
 
@@ -25,7 +25,7 @@ Bing for Commerce APIs use Bearer Tokens for authentication. You can use the [Bi
 
 ### Samples
 
-Please take a look at the [sample](./samples/) for a quick example for how to use the sdk in order to manage your indexes, push data to your index catalog and perform search queries on your data.
+Please take a look at the [sample](./samples/) for a quick example for how to use the SDK in order to manage your indexes, push data to your index catalog and perform search queries on your data.
 
 
 ## Contributing
