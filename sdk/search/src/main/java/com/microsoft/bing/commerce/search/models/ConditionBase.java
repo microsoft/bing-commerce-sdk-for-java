@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 
 /**
- * The condition that triggered a boost in ranking score.
+ * The condition that items must satisfy to be boosted.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "_type", defaultImpl = ConditionBase.class)
 @JsonTypeName("ConditionBase")

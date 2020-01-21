@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class CommerceSearchPostRequest {
     /**
-     * The market where the results come from. Thypically, `mkt` is the country
+     * The market where the results come from. Typically, `mkt` is the country
      * where the user is making the request from.
      */
     @JsonProperty(value = "market")
@@ -68,7 +68,7 @@ public class CommerceSearchPostRequest {
     private String searchInstanceId;
 
     /**
-     * Get the market where the results come from. Thypically, `mkt` is the country where the user is making the request from.
+     * Get the market where the results come from. Typically, `mkt` is the country where the user is making the request from.
      *
      * @return the market value
      */
@@ -77,7 +77,7 @@ public class CommerceSearchPostRequest {
     }
 
     /**
-     * Set the market where the results come from. Thypically, `mkt` is the country where the user is making the request from.
+     * Set the market where the results come from. Typically, `mkt` is the country where the user is making the request from.
      *
      * @param market the market value to set
      * @return the CommerceSearchPostRequest object itself.

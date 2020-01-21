@@ -12,24 +12,25 @@ package com.microsoft.bing.commerce.search.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Defines an expression that modifies the ranking score of results based on a
- * condition.
+ * An expression that modifies the ranking score for item search results
+ * satisfying a condition.
  */
-public class ResponseBoostExpression {
+public class BoostExpression {
     /**
-     * The condition that triggered a boost in ranking score.
+     * The condition that items must satisfy to be boosted.
      */
     @JsonProperty(value = "condition")
     private ConditionBase condition;
 
     /**
-     * The magnitude of a boost applied.
+     * The value to add to the ranking score. The range is -10,000,000 to
+     * 10,000,000.
      */
     @JsonProperty(value = "boost")
     private Double boost;
 
     /**
-     * Get the condition that triggered a boost in ranking score.
+     * Get the condition that items must satisfy to be boosted.
      *
      * @return the condition value
      */
@@ -38,18 +39,18 @@ public class ResponseBoostExpression {
     }
 
     /**
-     * Set the condition that triggered a boost in ranking score.
+     * Set the condition that items must satisfy to be boosted.
      *
      * @param condition the condition value to set
-     * @return the ResponseBoostExpression object itself.
+     * @return the BoostExpression object itself.
      */
-    public ResponseBoostExpression withCondition(ConditionBase condition) {
+    public BoostExpression withCondition(ConditionBase condition) {
         this.condition = condition;
         return this;
     }
 
     /**
-     * Get the magnitude of a boost applied.
+     * Get the value to add to the ranking score. The range is -10,000,000 to 10,000,000.
      *
      * @return the boost value
      */
@@ -58,12 +59,12 @@ public class ResponseBoostExpression {
     }
 
     /**
-     * Set the magnitude of a boost applied.
+     * Set the value to add to the ranking score. The range is -10,000,000 to 10,000,000.
      *
      * @param boost the boost value to set
-     * @return the ResponseBoostExpression object itself.
+     * @return the BoostExpression object itself.
      */
-    public ResponseBoostExpression withBoost(Double boost) {
+    public BoostExpression withBoost(Double boost) {
         this.boost = boost;
         return this;
     }

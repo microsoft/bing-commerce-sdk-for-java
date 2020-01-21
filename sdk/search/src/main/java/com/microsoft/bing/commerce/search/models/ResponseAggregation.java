@@ -23,7 +23,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 @JsonSubTypes({
     @JsonSubTypes.Type(name = "Filter", value = ResponseFilter.class),
     @JsonSubTypes.Type(name = "DiscoveredFacets", value = ResponseDiscoveredFacets.class),
-    @JsonSubTypes.Type(name = "Response.RefinementBase", value = ResponseRefinementBase.class),
     @JsonSubTypes.Type(name = "Response.FieldAggregationBase", value = ResponseFieldAggregationBase.class)
 })
 public class ResponseAggregation extends ResponseTask {

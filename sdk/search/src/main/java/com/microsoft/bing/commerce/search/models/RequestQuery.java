@@ -43,7 +43,7 @@ public class RequestQuery {
      * The set of boosts to apply to the result set.
      */
     @JsonProperty(value = "boosts")
-    private List<RequestBoostExpression> boosts;
+    private List<BoostExpression> boosts;
 
     /**
      * A boolean flag to enable or disable query alteration.
@@ -58,12 +58,6 @@ public class RequestQuery {
      */
     @JsonProperty(value = "synonyms")
     private List<Synonym> synonyms;
-
-    /**
-     * Business rule ids to skip applying from request search instance.
-     */
-    @JsonProperty(value = "excludeBusinessRules")
-    private List<String> excludeBusinessRules;
 
     /**
      * Get a query that matches against all searchable fields.
@@ -130,7 +124,7 @@ public class RequestQuery {
      *
      * @return the boosts value
      */
-    public List<RequestBoostExpression> boosts() {
+    public List<BoostExpression> boosts() {
         return this.boosts;
     }
 
@@ -140,7 +134,7 @@ public class RequestQuery {
      * @param boosts the boosts value to set
      * @return the RequestQuery object itself.
      */
-    public RequestQuery withBoosts(List<RequestBoostExpression> boosts) {
+    public RequestQuery withBoosts(List<BoostExpression> boosts) {
         this.boosts = boosts;
         return this;
     }
@@ -182,26 +176,6 @@ public class RequestQuery {
      */
     public RequestQuery withSynonyms(List<Synonym> synonyms) {
         this.synonyms = synonyms;
-        return this;
-    }
-
-    /**
-     * Get business rule ids to skip applying from request search instance.
-     *
-     * @return the excludeBusinessRules value
-     */
-    public List<String> excludeBusinessRules() {
-        return this.excludeBusinessRules;
-    }
-
-    /**
-     * Set business rule ids to skip applying from request search instance.
-     *
-     * @param excludeBusinessRules the excludeBusinessRules value to set
-     * @return the RequestQuery object itself.
-     */
-    public RequestQuery withExcludeBusinessRules(List<String> excludeBusinessRules) {
-        this.excludeBusinessRules = excludeBusinessRules;
         return this;
     }
 
