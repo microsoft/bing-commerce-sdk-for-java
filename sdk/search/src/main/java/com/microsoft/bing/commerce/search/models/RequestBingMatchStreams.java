@@ -27,12 +27,6 @@ public class RequestBingMatchStreams extends RequestMatch {
     private List<String> include;
 
     /**
-     * The exclude property.
-     */
-    @JsonProperty(value = "exclude")
-    private List<String> exclude;
-
-    /**
      * Get the include value.
      *
      * @return the include value
@@ -49,26 +43,6 @@ public class RequestBingMatchStreams extends RequestMatch {
      */
     public RequestBingMatchStreams withInclude(List<String> include) {
         this.include = include;
-        return this;
-    }
-
-    /**
-     * Get the exclude value.
-     *
-     * @return the exclude value
-     */
-    public List<String> exclude() {
-        return this.exclude;
-    }
-
-    /**
-     * Set the exclude value.
-     *
-     * @param exclude the exclude value to set
-     * @return the RequestBingMatchStreams object itself.
-     */
-    public RequestBingMatchStreams withExclude(List<String> exclude) {
-        this.exclude = exclude;
         return this;
     }
 

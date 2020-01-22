@@ -49,7 +49,7 @@ public class ResponseCustomization extends ResponseTask {
      * The boost expressions applied to the search result.
      */
     @JsonProperty(value = "boosts")
-    private List<ResponseBoostExpression> boosts;
+    private List<BoostExpression> boosts;
 
     /**
      * Get a boolean to determine if query alteration have been applied to the search operation.
@@ -136,7 +136,7 @@ public class ResponseCustomization extends ResponseTask {
      *
      * @return the boosts value
      */
-    public List<ResponseBoostExpression> boosts() {
+    public List<BoostExpression> boosts() {
         return this.boosts;
     }
 
@@ -146,7 +146,7 @@ public class ResponseCustomization extends ResponseTask {
      * @param boosts the boosts value to set
      * @return the ResponseCustomization object itself.
      */
-    public ResponseCustomization withBoosts(List<ResponseBoostExpression> boosts) {
+    public ResponseCustomization withBoosts(List<BoostExpression> boosts) {
         this.boosts = boosts;
         return this;
     }

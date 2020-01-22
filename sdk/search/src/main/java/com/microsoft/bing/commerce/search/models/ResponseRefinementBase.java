@@ -15,41 +15,40 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 
 /**
- * Defines the abstract base type for refinement based aggregation.
+ * The abstract base type for a refinement on a facet.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "_type", defaultImpl = ResponseRefinementBase.class)
 @JsonTypeName("Response.RefinementBase")
 @JsonSubTypes({
-    @JsonSubTypes.Type(name = "RangeRefinement", value = ResponseRangeRefinement.class),
     @JsonSubTypes.Type(name = "NumberRefinement", value = ResponseNumberRefinement.class),
     @JsonSubTypes.Type(name = "StringRefinement", value = ResponseStringRefinement.class),
-    @JsonSubTypes.Type(name = "BoolRefinement", value = ResponseBoolRefinement.class)
+    @JsonSubTypes.Type(name = "BoolRefinement", value = ResponseBoolRefinement.class),
+    @JsonSubTypes.Type(name = "RangeRefinement", value = ResponseRangeRefinement.class)
 })
-public class ResponseRefinementBase extends ResponseAggregation {
+public class ResponseRefinementBase {
     /**
-     * The label to use for the aggregation, that you can use to render your
-     * UI.
+     * An estimate of the number of items in this refinement.
      */
-    @JsonProperty(value = "label")
-    private String label;
+    @JsonProperty(value = "estimatedCount")
+    private Long estimatedCount;
 
     /**
-     * Get the label to use for the aggregation, that you can use to render your UI.
+     * Get an estimate of the number of items in this refinement.
      *
-     * @return the label value
+     * @return the estimatedCount value
      */
-    public String label() {
-        return this.label;
+    public Long estimatedCount() {
+        return this.estimatedCount;
     }
 
     /**
-     * Set the label to use for the aggregation, that you can use to render your UI.
+     * Set an estimate of the number of items in this refinement.
      *
-     * @param label the label value to set
+     * @param estimatedCount the estimatedCount value to set
      * @return the ResponseRefinementBase object itself.
      */
-    public ResponseRefinementBase withLabel(String label) {
-        this.label = label;
+    public ResponseRefinementBase withEstimatedCount(Long estimatedCount) {
+        this.estimatedCount = estimatedCount;
         return this;
     }
 
