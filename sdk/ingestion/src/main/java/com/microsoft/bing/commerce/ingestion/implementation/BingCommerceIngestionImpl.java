@@ -10,8 +10,6 @@
 package com.microsoft.bing.commerce.ingestion.implementation;
 
 import com.microsoft.bing.commerce.ingestion.BingCommerceIngestion;
-import com.microsoft.rest.ServiceClient;
-import com.microsoft.rest.RestClient;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import com.google.common.reflect.TypeToken;
@@ -25,13 +23,19 @@ import com.microsoft.bing.commerce.ingestion.models.RequestsStringSet;
 import com.microsoft.bing.commerce.ingestion.models.SchemaDetectionResponse;
 import com.microsoft.bing.commerce.ingestion.models.TransformationConfigResponse;
 import com.microsoft.bing.commerce.ingestion.models.TransformationTryoutResponse;
+
 import com.microsoft.rest.RestException;
 import com.microsoft.rest.ServiceCallback;
 import com.microsoft.rest.ServiceFuture;
 import com.microsoft.rest.ServiceResponse;
 import com.microsoft.rest.Validator;
+import com.microsoft.rest.ServiceClient;
+import com.microsoft.rest.RestClient;
+
 import java.io.IOException;
+
 import okhttp3.ResponseBody;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
@@ -90,7 +94,8 @@ public class BingCommerceIngestionImpl extends ServiceClient implements BingComm
      * @param restBuilder the builder for building an Retrofit client, bundled with user configurations
      */
     public BingCommerceIngestionImpl(String baseUrl, OkHttpClient.Builder clientBuilder, Retrofit.Builder restBuilder) {
-        super(baseUrl, clientBuilder, restBuilder);
+
+        super(baseUrl, clientBuilder, restBuilder.addConverterFactory(ScalarsConverterFactory.create()));
         initialize();
     }
 
@@ -109,8 +114,7 @@ public class BingCommerceIngestionImpl extends ServiceClient implements BingComm
     }
 
     private void initializeService() {
-        service = retrofit().create(BingCommerceIngestionService.class);
-    }
+        service = retrofit().create(BingCommerceIngestionService.class); }
 
     /**
      * The interface defining all the services for BingCommerceIngestion to be
