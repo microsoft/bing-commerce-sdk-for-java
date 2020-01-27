@@ -53,7 +53,7 @@ Creating the SDK client object SDK are the first step you need to do in order to
 
 #### Create the Ingestion SDK Client
 ~~~java
-private BingCommerceSearch createSearchClient(String accessToken) {
+private BingCommerceSearch createSearchClient(final String accessToken) {
     
     OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
             .addInterceptor(new AccessTokenInterceptor( new SimpleAccessTokenProvider(accessToken) ));
@@ -65,7 +65,7 @@ private BingCommerceSearch createSearchClient(String accessToken) {
 
 #### Create the Search SDK Client
 ~~~java
-private BingCommerceIngestion createSearchClient(String accessToken) {
+private BingCommerceIngestion createSearchClient(final String accessToken) {
     
     OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
             .addInterceptor(new AccessTokenInterceptor( new SimpleAccessTokenProvider(accessToken) ));
@@ -114,12 +114,12 @@ private ResponseIndex createIndex(final BingCommerceIngestion ingestionClient, f
 
 #### Get all indexes
 ~~~java
-IndexResponse allIndexes = ingestionClient.getAllIndexes(tenantId);
+IndexResponse allIndexesResponse = ingestionClient.getAllIndexes(tenantId);
 ~~~
 
 #### Get an index by Id
 ~~~java
-IndexResponse allIndexes = ingestionClient.getAllIndexes(tenantId, indexId);
+IndexResponse myIndexResponse = ingestionClient.getIndex(tenantId, indexId);
 ~~~
 
 ### Pushing data
@@ -211,7 +211,7 @@ String myScript = readScriptResponse.value();
 
 #### Delete the transformation config
 ~~~java
-TransformationConfigResponse deleteScriptResponse = client.deleteTransformationConfig(TENANT_ID, indexId);
+TransformationConfigResponse deleteScriptResponse = client.deleteTransformationConfig(tenantId, indexId);
 ~~~
 
 ### Transformation Script Tryout
@@ -223,15 +223,15 @@ private String UploadTransformationTryout(String script) {
 
     TransformationConfigResponse createScriptResponse = client.uploadTryOutConfig(script);
 
-    return createScriptResponse.tryoutId();
+    return createScriptResponse.tryOutId();
 }
 ~~~
 
 #### Test the transformation config tryout
 ~~~java
-private bool ExecuteTransformationTryout(String script) {
+private bool ExecuteTransformationTryout(String data, String tryOutId) {
 
-    TransformationTryoutResponse executeResponse = client.executeTryOutConfig(script);
+    TransformationTryoutResponse executeResponse = client.executeTryOutConfig(data, tryOutId);
 
     return executeResponse.status() == "Succeeded";
 }
