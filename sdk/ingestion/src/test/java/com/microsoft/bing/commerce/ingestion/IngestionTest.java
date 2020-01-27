@@ -9,6 +9,7 @@ import java.util.Arrays;
 
 import com.microsoft.bing.commerce.ingestion.util.AccessTokenInterceptor;
 import com.microsoft.bing.commerce.ingestion.util.AccessTokenProvider;
+import com.microsoft.rest.RestException;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -17,6 +18,7 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import retrofit2.HttpException;
 import retrofit2.Retrofit;
 
 import com.microsoft.bing.commerce.ingestion.BingCommerceIngestion;
@@ -31,6 +33,15 @@ public class IngestionTest extends TestCase
     private final static String TENANT_ID = System.getenv("INGEST_TENANT");
     private final static String ACCESS_TOKEN = System.getenv("INGEST_TOKEN");
     private final static String TEST_INDEX_NAME = "testIndex01234";
+    private final static String script = "retailSearchInput({\n" +
+            "    format: 'TSV'\n" +
+            "});\n" +
+            "\n" +
+            "transform((product, rawProduct) => {\n" +
+            "    \n" +
+            "});\n" +
+            "retailSearchOutput({});";
+
     /**
      * Create the test case
      *
@@ -132,6 +143,41 @@ public class IngestionTest extends TestCase
         assertNotNull("Expected non-null update id", statusResponse.status());
     }
 
+    public void testTransformationApi()
+    {
+        BingCommerceIngestion client = createClient();
+
+        String indexId = EnsureTestIndex(client);
+
+        TransformationConfigResponse createScriptResponse = client.createOrUpdateTransformationConfig(script, TENANT_ID, indexId);
+        TransformationConfigResponse readScriptResponse = client.getTransformationConfig(TENANT_ID, indexId);
+        TransformationConfigResponse deleteScriptResponse = client.deleteTransformationConfig(TENANT_ID, indexId);
+
+        assertEquals(script, deleteScriptResponse.value());
+
+        try {
+            client.getTransformationConfig(TENANT_ID, indexId);
+            assertTrue("Expecting an exception, but passed", false);
+        }
+        catch (RestException e) {
+            assertEquals(400, e.response().code());
+        }
+
+    }
+
+    public void testTryoutTransformationApi()
+    {
+        BingCommerceIngestion client = createClient();
+
+        String data = "id\ttitle\n" +
+                "1\tSample Product";
+
+        TransformationConfigResponse createScriptResponse = client.uploadTryOutConfig(script);
+        TransformationTryoutResponse executeResponse = client.executeTryOutConfig(data, createScriptResponse.tryOutId());
+
+        assertEquals("Succeeded", executeResponse.status());
+    }
+
     private BingCommerceIngestion createClient()
     {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
@@ -166,13 +212,13 @@ public class IngestionTest extends TestCase
         return createResponse.indexes().get(0).id();
     }
 
-    public class TestTrafficInterceptor implements Interceptor
-    {
+    public class TestTrafficInterceptor implements Interceptor {
         PrintStream _cw;
-        TestTrafficInterceptor(PrintStream cw)
-        {
+
+        TestTrafficInterceptor(PrintStream cw) {
             this._cw = cw;
         }
+
         @Override
         public Response intercept(Interceptor.Chain chain) throws IOException {
             Request request = chain.request();
