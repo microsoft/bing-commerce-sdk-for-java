@@ -23,7 +23,221 @@ Coming soon.
 
 Bing for Commerce APIs use Bearer Tokens for authentication. You can use the [Bing for Commerce Portal Documentation](https://commerce.bing.com/docs/Portal%20Documentation/#manage-keys-and-tokens) for help creating one.
 
-### Samples
+## Usage
+
+## Imports
+
+You will need to add imports for the required implementation as part of the sdk, besides any other dependencies needed.
+
+#### Ingestion imports:
+~~~java
+import com.microsoft.bing.commerce.ingestion.BingCommerceIngestion;
+import com.microsoft.bing.commerce.ingestion.implementation.BingCommerceIngestionImpl;
+import com.microsoft.bing.commerce.ingestion.models.*;
+import com.microsoft.bing.commerce.ingestion.util.AccessTokenInterceptor;
+import com.microsoft.bing.commerce.ingestion.util.AccessTokenProvider;
+~~~
+
+#### Search imports:
+~~~java
+import com.microsoft.bing.commerce.search.BingCommerceSearch;
+import com.microsoft.bing.commerce.search.implementation.BingCommerceSearchImpl;
+import com.microsoft.bing.commerce.search.models.*;
+import com.microsoft.bing.commerce.search.util.AccessTokenInterceptor;
+import com.microsoft.bing.commerce.search.util.AccessTokenProvider;
+~~~
+
+### Create the SDK client object
+
+Creating the SDK client object SDK are the first step you need to do in order to call the Bing for Commerce services APis. You will need first to get an access token with the proper access scope as described [here](https://commerce.bing.com/docs/Portal%20Documentation/#manage-keys-and-tokens).
+
+#### Create the Ingestion SDK Client
+~~~java
+private BingCommerceSearch createSearchClient(String accessToken) {
+    
+    OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
+            .addInterceptor(new AccessTokenInterceptor( new SimpleAccessTokenProvider(accessToken) ));
+    Retrofit.Builder retrofit = new Retrofit.Builder();
+
+    return new BingCommerceSearchImpl(httpClient, retrofit);
+}
+~~~
+
+#### Create the Search SDK Client
+~~~java
+private BingCommerceIngestion createSearchClient(String accessToken) {
+    
+    OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
+            .addInterceptor(new AccessTokenInterceptor( new SimpleAccessTokenProvider(accessToken) ));
+    Retrofit.Builder retrofit = new Retrofit.Builder();
+
+    return new BingCommerceIngestionImpl(httpClient, retrofit);
+}
+~~~
+
+### Manage your Index
+
+You can create and manage you index using the Bing for Commerce portal. However, you could also use the SDK to manage your indexes.
+
+#### Create an index
+~~~java
+private ResponseIndex createIndex(final BingCommerceIngestion ingestionClient, final String tenantId, final String indexName) {
+
+    // Prepare the index fields
+    IndexField idField = new IndexField()
+            .withName("ProductId")
+            .withType(IndexFieldType.PRODUCT_ID) // Exactly one Product Id field is required while creating an index.
+            .withFilterable(true)
+            .withRetrievable(true); 
+    IndexField titleField = new IndexField()
+            .withName("ProductTitle")
+            .withType(IndexFieldType.TITLE)
+            .withRetrievable(true)
+            .withSearchable(true);
+    IndexField descriptionField = new IndexField()
+            .withName("ProductDescription")
+            .withType(IndexFieldType.DESCRIPTION)
+            .withRetrievable(true)
+            .withSearchable(true);
+
+    // Prepare the Index using the prepared fields
+    Index newIndexReq = new Index()
+            .withName(indexName)
+            .withDescription("My sample index description")
+            .withFields(Arrays.asList(idField, titleField, descriptionField));
+
+    // Create the index
+    IndexResponse createResponse = ingestionClient.createIndex(tenantId, null,newIndexReq);
+    return createResponse.indexes().get(0);
+}
+~~~
+
+#### Get all indexes
+~~~java
+IndexResponse allIndexes = ingestionClient.getAllIndexes(tenantId);
+~~~
+
+#### Get an index by Id
+~~~java
+IndexResponse allIndexes = ingestionClient.getAllIndexes(tenantId, indexId);
+~~~
+
+### Pushing data
+
+The APIs to push data to Bing for Commerce are asynchronous, where the service / SDK contains two separate APIs to serve this, one for the push itself, and another to track down the status.
+
+The content that you will be pushing to your index catalog needs to match the index configuration that you have the index created with, and it can be in any of the following formats:
+* JSon Array.
+* ND-JSon (New-Line Delimited JSon).
+* CSV.
+* TSV.
+
+Please note however that if you have a transformation config added to your index, the format of the pushed data needs to match that of what your transformation script is expecting.
+
+#### Push Data
+~~~java
+private String pushData(final BingCommerceIngestion ingestionClient, final String tenantId, final String indexId, final String content) {
+
+    PushDataUpdateResponse pushResponse = ingestionClient.pushDataUpdate(content, tenantId, indexId);
+
+    return pushResponse.updateId();
+}
+~~~
+
+#### Push Data Status
+~~~java
+private String pushDataStatus(final BingCommerceIngestion ingestionClient, final String tenantId, final String indexId, final String pushDataUpdateId) {
+
+    PushUpdateStatusResponse status = client.pushDataStatus(TENANT_ID, indexId, pushDataUpdateId);
+
+    // returns the overall status for the push call.
+    //
+    // You can get the status for each record being updated by accessing status.records() list.
+    return status.status();
+}
+~~~
+
+### Search Query
+
+You can use the Search SDK to do queries on your Bing for Commerce indexes given that you have an access token with the proper scope. 
+
+#### Simple Search Query
+There are few cusomizations that you can still apply to the simple search query api by providing different values for different API arguments (like: market, language, field select, order configuration, pagination, facet discovery and query alteration toggle).
+~~~java
+private ResponseItemsBase simpleSearch(final BingCommerceSearch searchClient, final String tenantId, final String indexId, final String queryTerm) {
+
+    CommerceSearchResponse response = searchClient.searchs().get(queryTerm, tenandId, indexId);
+
+    return response.items();
+}
+~~~
+
+#### Advanced Search Query
+You can do a lot more customization (like filering, boosting, ...etc) to your advanced search query by providing a detailed search query description for how you want your results to be.
+~~~java
+private ResponseItemsBase advancedSearch(final BingCommerceSearch searchClient, final String tenantId, final String indexId) {
+
+    // Prepare the Search request.
+    CommerceSearchPostRequest request = new CommerceSearchPostRequest()
+            .withQuery(new RequestQuery().withFilter(
+                new StringSetCondition()
+                    .withValues(Arrays.asList("First Condition", "Second Condition"))
+                    .withField("My Search Field"))
+            .withItems(new RequestItems().withSelect( Arrays.asList("*") ))
+            .withAggregations(Arrays.asList(new RequestDiscoverFacets().withName("discovered facets")));
+
+    // Send the search request.
+    CommerceSearchResponse response = searchClient.searchs().post(request, tenantId, indexId);
+
+    return response.items();
+}
+~~~
+
+### Transformation Script Management
+You can upload a custom configuration that you might need applied to the data you push to your index automatically. Please refer to the [Bing for Commerce docs](https://commerce.bing.com/docs/product-search/#transformation-script-management-api) for more details about how to create a valid transformation config.
+
+#### Create or Update the transformation config
+~~~java
+String myScript = GetMyTransformationScript();
+TransformationConfigResponse createScriptResponse = ingestionClient.createOrUpdateTransformationConfig(myScript, tenantId, indexId);
+~~~
+
+#### Get the existing tranformation config
+~~~java
+// Note that the getTransformationConfig will throw a 400 Bad Request if your index doesn't have a transformation config.
+TransformationConfigResponse readScriptResponse = client.getTransformationConfig(tenantId, indexId);
+String myScript = readScriptResponse.value();
+~~~
+
+#### Delete the transformation config
+~~~java
+TransformationConfigResponse deleteScriptResponse = client.deleteTransformationConfig(TENANT_ID, indexId);
+~~~
+
+### Transformation Script Tryout
+Before you associate a transformation script to your index, you can use the transformation tryout apis to make sure that your index works with your data and the SDK before actually associating it to your index.
+
+#### Upload a tranformation config tryout
+~~~java
+private String UploadTransformationTryout(String script) {
+
+    TransformationConfigResponse createScriptResponse = client.uploadTryOutConfig(script);
+
+    return createScriptResponse.tryoutId();
+}
+~~~
+
+#### Test the transformation config tryout
+~~~java
+private bool ExecuteTransformationTryout(String script) {
+
+    TransformationTryoutResponse executeResponse = client.executeTryOutConfig(script);
+
+    return executeResponse.status() == "Succeeded";
+}
+~~~
+
+## Samples
 
 Please take a look at the [sample](./samples/) for a quick example for how to use the SDK in order to manage your indexes, push data to your index catalog and perform search queries on your data.
 

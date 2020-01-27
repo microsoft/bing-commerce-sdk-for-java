@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.microsoft.bing.commerce.search.models.*;
-import com.microsoft.bing.commerce.search.util.AccessTokenInterceptor;
-import com.microsoft.bing.commerce.search.util.AccessTokenProvider;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 
@@ -22,6 +19,9 @@ import com.microsoft.bing.commerce.ingestion.models.*;
 
 import com.microsoft.bing.commerce.search.BingCommerceSearch;
 import com.microsoft.bing.commerce.search.implementation.BingCommerceSearchImpl;
+import com.microsoft.bing.commerce.search.models.*;
+import com.microsoft.bing.commerce.search.util.AccessTokenInterceptor;
+import com.microsoft.bing.commerce.search.util.AccessTokenProvider;
 
 /**
  * Hello world!
@@ -146,7 +146,6 @@ public class App
         PushDataUpdateResponse pushResponse = client.pushDataUpdate(content, TENANT_ID, indexId);
 
         return pushResponse.updateId();
-
     }
 
     private static <T> String createJSON(T product) throws JsonProcessingException {
@@ -177,7 +176,6 @@ public class App
                 .withAggregations(Arrays.asList(new RequestDiscoverFacets().withName("discovered facets")));
 
         CommerceSearchResponse response = client.searchs().post(request, TENANT_ID, indexId);
-
         return response.items().totalEstimatedMatches();
     }
 
