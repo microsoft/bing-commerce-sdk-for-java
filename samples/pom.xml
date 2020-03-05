@@ -4,7 +4,7 @@
 
   <groupId>com.microsoft.bing</groupId>
   <artifactId>bing-commerce-samples</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>jar</packaging>
 
   <name>Microsoft Bing for Commerce Samples</name>
@@ -12,10 +12,14 @@
   
   <dependencies>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
+      <groupId>com.microsoft.bing</groupId>
+      <artifactId>bing-commerce-ingestion</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.microsoft.bing</groupId>
+      <artifactId>bing-commerce-search</artifactId>
+      <version>1.0.0</version>
     </dependency>
     <dependency>
       <groupId>com.squareup.retrofit2</groupId>
@@ -60,27 +64,7 @@
   </properties>
 
   <build>
-    <sourceDirectory>samples/java</sourceDirectory>
     <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <version>3.0.0</version>
-        <executions>
-          <execution>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>add-source</goal>
-            </goals>
-            <configuration>
-              <sources>
-                <source>sdk/search/src/main/java</source>
-                <source>sdk/ingestion/src/main/java</source>
-              </sources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>

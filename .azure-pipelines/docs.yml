@@ -51,7 +51,7 @@ jobs:
   steps:
   - task: Maven@3
     inputs:
-      mavenPomFile: 'pom.xml'
+      mavenPomFile: 'samples/pom.xml'
       publishJUnitResults: true
       javaHomeOption: 'JDKVersion'
       mavenVersionOption: 'Default'
