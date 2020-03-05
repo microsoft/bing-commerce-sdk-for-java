@@ -1,6 +1,9 @@
 
 # Bing for Commerce Java SDK
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.microsoft.bing/bing-commerce-search/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.microsoft.bing/bing-commerce-search) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.microsoft.bing/bing-commerce-ingestion/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.microsoft.bing/bing-commerce-ingestion)
+
+
 ## Overview
 
 This contains the generated SDKs that can help developers integrate with Bing for Commerce platform, both on the Search and Ingestion sides. The repository also contains unit tests and samples that can show you quick examples for how to use the SDKs.
@@ -17,7 +20,27 @@ For more details about the project, please refer to the [Bing for Commerce main 
 
 ### Adding the package to your product
 
-Coming soon.
+Both search and ingestion SDKs are published to the Maven central repository, you just need to add the dependencies in your pom file, and you'll be able to start using it.
+
+#### Seach package
+
+~~~xml
+<dependency>
+  <groupId>com.microsoft.bing</groupId>
+  <artifactId>bing-commerce-search</artifactId>
+  <version>1.0.0</version>
+</dependency>
+~~~
+
+#### Ingestion package
+
+~~~xml
+<dependency>
+  <groupId>com.microsoft.bing</groupId>
+  <artifactId>bing-commerce-ingestion</artifactId>
+  <version>1.0.0</version>
+</dependency>
+~~~
 
 ### Authenticate the client
 
