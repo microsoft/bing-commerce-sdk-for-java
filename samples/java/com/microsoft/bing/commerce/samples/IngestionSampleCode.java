@@ -172,7 +172,7 @@ public class IngestionSampleCode {
 
         IndexResponse createResponse =client.createIndex(TENANT_ID, ACCESS_TOKEN, newIndexReq);
 
-        IndexResponse getIndexResponse=client.getIndex(TENANT_ID, createResponse.indexes().get(0).id())
+        IndexResponse getIndexResponse=client.getIndex(TENANT_ID, createResponse.indexes().get(0).id());
     }
 
     private static void GetListOfIndexDefinition(BingCommerceIngestion client)
