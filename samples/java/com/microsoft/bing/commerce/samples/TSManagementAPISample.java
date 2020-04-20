@@ -31,7 +31,7 @@ public class TSManagementAPISample {
 
 private static void CreateScript(BingCommerceIngestion ingestionClient)throws IOException
 {
-    File file = new File("C:\\Users\\pankaj\\Desktop\\test.txt"); 
+    File file = new File("Defines a path to the content index on your local file system"); 
     BufferedReader br = new BufferedReader(new FileReader(file)); 
     
     String script= br.readLine();
@@ -51,13 +51,13 @@ private static void DeleteScrip(BingCommerceIngestion ingestionClient)
 
 private static void TestTryoutTransfromationApi(BingCommerceIngestion ingestionClient)throws IOException
 {
-    File file = new File("C:\\Users\\pankaj\\Desktop\\test.txt"); 
+    File file = new File("Defines a path to the content index on your local file system"); 
     BufferedReader br = new BufferedReader(new FileReader(file)); 
     
     String script= br.readLine();
     br.close();
 
-    File datafile = new File("C:\\Users\\pankaj\\Desktop\\test.txt"); 
+    File datafile = new File("Data file"); 
     BufferedReader brData = new BufferedReader(new FileReader(datafile)); 
     
     String data= brData.readLine();
