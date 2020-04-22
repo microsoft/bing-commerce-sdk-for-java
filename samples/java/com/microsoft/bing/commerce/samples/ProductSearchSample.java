@@ -14,206 +14,247 @@ import com.microsoft.bing.commerce.search.util.AccessTokenInterceptor;
 public class ProductSearchSample {
     private final static String TENANT_ID = System.getenv("TENANT_ID");
     private final static String ACCESS_TOKEN = System.getenv("ACCESS_TOKEN");
-    private final static String indexId = "INDEX_ID";
+    private final static String indexId = System.getenv("INDEX_ID");
+    
     public static void main( String[] args ) throws JsonProcessingException {
-        
         BingCommerceSearch searchClient = createSearchClient();
-
-        long getMatches = postSearch(searchClient);
-        System.out.format("found [%d] matches with get.\n", getMatches);
-        
+        long matches = postSearch(searchClient);
+        System.out.format("found [%d] matches with get.\n", matches);
     }
 
     private static long getSearch(BingCommerceSearch client) {
-        String q="headphones";
-        String tenant=TENANT_ID;
-        String index=indexId; 
-        String mkt=null;
-        String setlang=null;
-        String select="title,brand";
-        String orderby=null;
-        Integer top=20;
-        Integer skip=10;
-        Boolean discoverfacets=false;
-        Boolean alteration=true;
+        String q = "headphones";
+        String tenant = TENANT_ID;
+        String index = indexId; 
+        String mkt = null;
+        String setlang = null;
+        String select = "title,brand";
+        String orderby = null;
+        Integer top = 20;
+        Integer skip = 10;
+        Boolean discoverfacets = false;
+        Boolean alteration = true;
         Boolean debug = false; 
-        String searchinstanceid=null;
-
-        CommerceSearchResponse response=client.searchs().get(q, tenant, index, mkt, setlang, select, orderby, top, skip, discoverfacets, alteration, debug, searchinstanceid);
+        String searchinstanceid = null;
+        
+        CommerceSearchResponse response = client.searchs().get(q, tenant, index, mkt, setlang, select, orderby, top, skip, discoverfacets, alteration, debug, searchinstanceid);
         return response.items().totalEstimatedMatches();
     }
 
     private static long postSearch(BingCommerceSearch client) {
-        String matchAll="clothing";
-        List<String> selectItem= Arrays.asList("_itemId", "title");
+        String matchAll = "clothing";
+        List<String> selectItem = Arrays.asList("_itemId", "title");
 
-        RequestQuery query= new RequestQuery().withMatchAll(matchAll);
+        RequestQuery query = new RequestQuery().withMatchAll(matchAll);
 
-        CommerceSearchPostRequest request= new CommerceSearchPostRequest().withQuery(query)
-        .withItems(new RequestItems().withSelect(selectItem));
-
-        CommerceSearchResponse response = client.searchs().post(request, TENANT_ID, indexId);
-        return response.items().totalEstimatedMatches();
-    }
-
-    private static long Search_MatchingSpecificFields(BingCommerceSearch client) {
-       List<String> includeList= Arrays.asList("Material");
-        String icludeValue="suede";
-        List<String> selectItem= Arrays.asList("_itemId", "title", "description");
-
-        RequestQuery query= new RequestQuery().withValue(
-            new RequestBingMatchStreams().withInclude(includeList).withValue(icludeValue));
-
-        CommerceSearchPostRequest request= new CommerceSearchPostRequest().withQuery(query)
-        .withItems(new RequestItems().withSelect(selectItem));
+        CommerceSearchPostRequest request = new CommerceSearchPostRequest()
+        .withQuery(query)
+        .withItems(new RequestItems()
+        .withSelect(selectItem));
 
         CommerceSearchResponse response = client.searchs().post(request, TENANT_ID, indexId);
         return response.items().totalEstimatedMatches();
     }
 
-    private static long Filter(BingCommerceSearch client) {
-        String matchAll="clothing";
-        String field="brand";
-        String value="Microsoft";
+    private static long searchMatchingSpecificFields(BingCommerceSearch client) {
+       List<String> includeList = Arrays.asList("Material");
+        String includeValue = "suede";
+        List<String> selectItem = Arrays.asList("_itemId", "title", "description");
         
-        List<String> selectItem= Arrays.asList("_itemId", "brand", "title");
+        RequestQuery query = new RequestQuery()
+        .withValue(
+            new RequestBingMatchStreams()
+            .withInclude(includeList)
+            .withValue(includeValue));
+            
+        CommerceSearchPostRequest request = new CommerceSearchPostRequest()
+        .withQuery(query)
+        .withItems(new RequestItems()
+        .withSelect(selectItem));
 
-        ConditionBase filter = new StringCondition().withValue(value)
+        CommerceSearchResponse response = client.searchs().post(request, TENANT_ID, indexId);
+        return response.items().totalEstimatedMatches();
+    }
+
+    private static long filter(BingCommerceSearch client) {
+        String matchAll = "clothing";
+        String field = "brand";
+        String value = "Microsoft";
+        
+        List<String> selectItem = Arrays.asList("_itemId", "brand", "title");
+        
+        ConditionBase filter = new StringCondition()
+        .withValue(value)
         .withOperator(EquivalenceOperator.NE)
         .withField(field);
-
-
-        RequestQuery query= new RequestQuery().withMatchAll(matchAll).withFilter(filter);
- 
-        CommerceSearchPostRequest request= new CommerceSearchPostRequest().withQuery(query)
-         .withItems(new RequestItems().withSelect(selectItem));
- 
+        
+        RequestQuery query = new RequestQuery()
+        .withMatchAll(matchAll)
+        .withFilter(filter);
+        
+        CommerceSearchPostRequest request = new CommerceSearchPostRequest()
+        .withQuery(query)
+        .withItems(new RequestItems()
+        .withSelect(selectItem));
+        
         CommerceSearchResponse response = client.searchs().post(request, TENANT_ID, indexId);
         return response.items().totalEstimatedMatches();
      }
 
-     private static long FilterConditionBlock(BingCommerceSearch client) {
-        String matchAll="laptop";
-        
-        List<String> selectItem= Arrays.asList("_itemId", "title", "shortDescription");
-       
-        List<ConditionBase> conditions=Arrays.asList(
+     private static long filterConditionBlock(BingCommerceSearch client) {
+        String matchAll = "laptop";
+        List<String> selectItem = Arrays.asList("_itemId", "title", "shortDescription");
+        List<ConditionBase> conditions = Arrays.asList(
             new StringCondition().withValue("HP").withField("brand"),
             new StringCondition().withValue("Acer").withField("brand")
         );
-
-        ConditionBlock filter=new ConditionBlock().withConditions(conditions).withOperator(LogicalOperator.OR);
-     
-        RequestQuery query= new RequestQuery().withMatchAll(matchAll).withFilter(filter);
- 
-        CommerceSearchPostRequest request= new CommerceSearchPostRequest().withQuery(query)
-         .withItems(new RequestItems().withSelect(selectItem));
+        
+        ConditionBlock filter = new ConditionBlock()
+        .withConditions(conditions)
+        .withOperator(LogicalOperator.OR);
+        
+        RequestQuery query = new RequestQuery()
+        .withMatchAll(matchAll)
+        .withFilter(filter);
+        
+        CommerceSearchPostRequest request = new CommerceSearchPostRequest()
+        .withQuery(query)
+        .withItems(
+            new RequestItems()
+            .withSelect(selectItem));
  
         CommerceSearchResponse response = client.searchs().post(request, TENANT_ID, indexId);
         return response.items().totalEstimatedMatches();
      }
 
-     private static long Faceting(BingCommerceSearch client) {
-        String matchAll="laptop";
-        
-        List<String> selectItem= Arrays.asList("_itemId", "title", "shortDescription");
-        List<RequestAggregationBase> aggregations=Arrays.asList(
-            new RequestFacet().withField("field").withName("name")
-        );
-       
-        RequestQuery query= new RequestQuery().withMatchAll(matchAll);
- 
-        CommerceSearchPostRequest request= new CommerceSearchPostRequest().withQuery(query)
-         .withItems(new RequestItems().withSelect(selectItem).withTop(5)).withAggregations(aggregations);
- 
-        CommerceSearchResponse response = client.searchs().post(request, TENANT_ID, indexId);
-        return response.items().totalEstimatedMatches();
-     }
-
-     private static long Faceting_WithRageInterval(BingCommerceSearch client) {
-        String matchAll="laptop";
-        
-        List<String> selectItem= Arrays.asList("_itemId", "title", "shortDescription");
-
-        List<RequestAggregationBase> aggregations=Arrays.asList(
-            new RequestRangeFacet().withInterval(500)
-            .withField("Name of field on which faceting will be perormend")
+     private static long faceting(BingCommerceSearch client) {
+        String matchAll = "laptop";
+        List<String> selectItem = Arrays.asList("_itemId", "title", "shortDescription");
+        List<RequestAggregationBase> aggregations = Arrays.asList(
+            new RequestFacet()
+            .withField("field")
             .withName("name")
         );
-                
-        RequestQuery query= new RequestQuery().withMatchAll(matchAll);
- 
-        CommerceSearchPostRequest request= new CommerceSearchPostRequest().withQuery(query)
-         .withItems(new RequestItems().withSelect(selectItem).withTop(5)).withAggregations(aggregations);
- 
-        CommerceSearchResponse response = client.searchs().post(request, TENANT_ID, indexId);
-        return response.items().totalEstimatedMatches();
-     }
-
-     private static long Boosting(BingCommerceSearch client) {
-        String matchAll="laptop";
         
-        List<String> selectItem= Arrays.asList("_itemId", "_score", "brand", "title");
-
-        List<BoostExpression> boosts = Arrays.asList(
-            new BoostExpression().withCondition(new StringCondition().withValue("Microsoft").withField("brand")).withBoost(100.0)
-            );
-             
-        RequestQuery query= new RequestQuery().withMatchAll(matchAll).withBoosts(boosts);
-
-        CommerceSearchPostRequest request=new CommerceSearchPostRequest().withQuery(query)
-        .withItems(new RequestItems().withSelect(selectItem).withTop(5));
- 
-        CommerceSearchResponse response = client.searchs().post(request, TENANT_ID, indexId);
-        return response.items().totalEstimatedMatches();
-     }
-
-     private static long Burying(BingCommerceSearch client) {
-        String matchAll="laptop";
+        RequestQuery query = new RequestQuery().withMatchAll(matchAll);
         
-        List<String> selectItem= Arrays.asList("_itemId", "_score", "brand", "title");
-
-        List<BoostExpression> boosts = Arrays.asList(
-            new BoostExpression().withCondition(new StringCondition().withValue("Microsoft").withField("brand")).withBoost(-100.0)
-            );
-             
-        RequestQuery query= new RequestQuery().withMatchAll(matchAll).withBoosts(boosts);
-
-        CommerceSearchPostRequest request=new CommerceSearchPostRequest().withQuery(query)
-        .withItems(new RequestItems().withSelect(selectItem).withTop(5));
- 
-        CommerceSearchResponse response = client.searchs().post(request, TENANT_ID, indexId);
-        return response.items().totalEstimatedMatches();
-     }
-
-     private static long Sorting(BingCommerceSearch client) {
-        String matchAll="laptop";
+        CommerceSearchPostRequest request = new CommerceSearchPostRequest()
+        .withQuery(query)
+        .withItems(new RequestItems()
+        .withSelect(selectItem)
+        .withTop(5))
+        .withAggregations(aggregations);
         
-        List<String> selectItem= Arrays.asList("_itemId","title", "shortDescription");
-   
-        RequestQuery query= new RequestQuery().withMatchAll(matchAll);
-
-        CommerceSearchPostRequest request=new CommerceSearchPostRequest().withQuery(query)
-        .withItems(new RequestItems().withSelect(selectItem).withOrderBy("rating desc,baseRate"));
- 
-        CommerceSearchResponse response = client.searchs().post(request, TENANT_ID, indexId);
-        return response.items().totalEstimatedMatches();
-     }
-
-     private static long Paging(BingCommerceSearch client) {
-        String matchAll="laptop";
-        
-        List<String> selectItem= Arrays.asList("_itemId","title", "shortDescription");
-   
-        RequestQuery query= new RequestQuery().withMatchAll(matchAll);
-
-        CommerceSearchPostRequest request=new CommerceSearchPostRequest().withQuery(query)
-        .withItems(new RequestItems().withSelect(selectItem).withTop(10).withSkip(10));
- 
         CommerceSearchResponse response = client.searchs().post(request, TENANT_ID, indexId);
         return response.items().totalEstimatedMatches();
      }
      
+     private static long facetingWithRageInterval(BingCommerceSearch client) {
+        String matchAll = "laptop";
+        List<String> selectItem = Arrays.asList("_itemId", "title", "shortDescription");
+        
+        List<RequestAggregationBase> aggregations = Arrays.asList(
+            new RequestRangeFacet()
+            .withInterval(500)
+            .withField("Name of field on which faceting will be performed")
+            .withName("name"));
+            
+        RequestQuery query= new RequestQuery().withMatchAll(matchAll);
+        
+        CommerceSearchPostRequest request = new CommerceSearchPostRequest()
+        .withQuery(query)
+        .withItems(new RequestItems()
+        .withSelect(selectItem)
+        .withTop(5))
+        .withAggregations(aggregations);
+        
+        CommerceSearchResponse response = client.searchs().post(request, TENANT_ID, indexId);
+        return response.items().totalEstimatedMatches();
+     }
+
+     private static long boosting(BingCommerceSearch client) {
+        String matchAll = "laptop";
+        List<String> selectItem = Arrays.asList("_itemId", "_score", "brand", "title");
+        
+        List<BoostExpression> boosts = Arrays.asList(
+            new BoostExpression()
+            .withCondition(
+                new StringCondition()
+                .withValue("Microsoft")
+                .withField("brand"))
+                .withBoost(100.0));
+             
+        RequestQuery query = new RequestQuery().withMatchAll(matchAll).withBoosts(boosts);
+        
+        CommerceSearchPostRequest request = new CommerceSearchPostRequest()
+        .withQuery(query)
+        .withItems(new RequestItems()
+        .withSelect(selectItem)
+        .withTop(5));
+        
+        CommerceSearchResponse response = client.searchs().post(request, TENANT_ID, indexId);
+        return response.items().totalEstimatedMatches();
+     }
+
+     private static long burying(BingCommerceSearch client) {
+        String matchAll = "laptop";
+        List<String> selectItem = Arrays.asList("_itemId", "_score", "brand", "title");
+        
+        List<BoostExpression> boosts = Arrays.asList(
+            new BoostExpression()
+            .withCondition(
+                new StringCondition()
+                .withValue("Microsoft")
+                .withField("brand"))
+                .withBoost(-100.0));
+                
+        RequestQuery query = new RequestQuery().withMatchAll(matchAll).withBoosts(boosts);
+
+        CommerceSearchPostRequest request = new CommerceSearchPostRequest()
+        .withQuery(query)
+        .withItems(
+            new RequestItems()
+            .withSelect(selectItem)
+            .withTop(5));
+            
+        CommerceSearchResponse response = client.searchs().post(request, TENANT_ID, indexId);
+        return response.items().totalEstimatedMatches();
+     }
+
+    private static long sorting(BingCommerceSearch client) {
+        String matchAll = "laptop";
+        List<String> selectItem = Arrays.asList("_itemId","title", "shortDescription");
+        
+        RequestQuery query = new RequestQuery().withMatchAll(matchAll);
+        
+        CommerceSearchPostRequest request = new CommerceSearchPostRequest()
+        .withQuery(query)
+        .withItems(
+            new RequestItems()
+            .withSelect(selectItem)
+            .withOrderBy("rating desc,baseRate"));
+ 
+        CommerceSearchResponse response = client.searchs().post(request, TENANT_ID, indexId);
+        return response.items().totalEstimatedMatches();
+     }
+
+    private static long pagination(BingCommerceSearch client) {
+        String matchAll = "laptop";
+        List<String> selectItem = Arrays.asList("_itemId","title", "shortDescription");
+        
+        RequestQuery query = new RequestQuery().withMatchAll(matchAll);
+        
+        CommerceSearchPostRequest request = new CommerceSearchPostRequest()
+        .withQuery(query)
+        .withItems(
+            new RequestItems()
+            .withSelect(selectItem)
+            .withTop(10)
+            .withSkip(10));
+ 
+        CommerceSearchResponse response = client.searchs().post(request, TENANT_ID, indexId);
+        return response.items().totalEstimatedMatches();
+     }
 
     private static BingCommerceSearch createSearchClient() {
         System.out.format("Creating the search client with access token: %s.\n", ACCESS_TOKEN);
