@@ -24,13 +24,12 @@ public class CutomizationAPISample {
   private final static String INDEX_NAME = System.getenv("Sample_Index");
 
   public static void main(String[] args) throws IOException {
-
   }
 
   public static void getSearchInstance() {
     try {
-      String customURL = "https://commerce.bing.com/api/customization/v1/searchinstance/"
-      + TENANT_ID + "/indexes/"+ INDEX_NAME;
+      String customURL = "https://commerce.bing.com/api/customization/v1/searchinstance/" + TENANT_ID
+      + "/indexes/"+ INDEX_NAME;
 
       URL url = new URL(customURL);
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -69,8 +68,8 @@ public class CutomizationAPISample {
       POST_PARAMS.put("searchinstanceId", "BlackFridaySettings");
       String json = new ObjectMapper().writeValueAsString(POST_PARAMS);
 
-      String customURL = "https://commerce.bing.com/api/customization/v1/searchinstance/"
-      + TENANT_ID + "/indexes/"+ INDEX_NAME;
+      String customURL = "https://commerce.bing.com/api/customization/v1/searchinstance/" + TENANT_ID
+      + "/indexes/"+ INDEX_NAME;
       URL obj = new URL(customURL);
 
       HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
@@ -93,10 +92,9 @@ public class CutomizationAPISample {
 
   public static void deleteSearchInstance() throws IOException {
     String instanceId = "BlackFridaySettings";
-    String customURL = "https://commerce.bing.com/api/customization/v1/searchinstance/"
-    + TENANT_ID + "/indexes/"
-    + INDEX_NAME + "?searchinstanceid="
-    + instanceId;
+    String customURL = "https://commerce.bing.com/api/customization/v1/searchinstance/" + TENANT_ID
+    + "/indexes/" + INDEX_NAME
+    + "?searchinstanceid=" + instanceId;
 
     try {
       URL url = new URL(customURL);
@@ -134,8 +132,9 @@ public class CutomizationAPISample {
   public static void getAllRule() {
     String instanceId = "BlackFridaySettings";
     try {
-      String customURL = "https://commerce.bing.com/api/customization/v1/businessrules/rules/" + TENANT_ID + "/indexes/"
-          + INDEX_NAME + "?searchinstanceid=" + instanceId;
+      String customURL = "https://commerce.bing.com/api/customization/v1/businessrules/rules/" + TENANT_ID
+      + "/indexes/" + INDEX_NAME
+      + "?searchinstanceid=" + instanceId;
       URL url = new URL(customURL);
 
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -173,8 +172,10 @@ public class CutomizationAPISample {
     String instanceId = "BlackFridaySettings";
     String rule = "ruleclothing";
     try {
-      String customURL = "https://commerce.bing.com/api/customization/v1/businessrules/rule/" + TENANT_ID + "/indexes/"
-          + INDEX_NAME + "?rule=" + rule + "&searchinstanceid=" + instanceId;
+      String customURL = "https://commerce.bing.com/api/customization/v1/businessrules/rule/" + TENANT_ID
+      + "/indexes/" + INDEX_NAME
+      + "?rule=" + rule
+      + "&searchinstanceid=" + instanceId;
       URL url = new URL(customURL);
 
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -211,8 +212,10 @@ public class CutomizationAPISample {
   public static void deleteRule() throws IOException {
     String instanceId = "BlackFridaySettings";
     String rule = "ruleclothing";
-    String customURL = "https://commerce.bing.com/api/customization/v1/businessrules/rule/" + TENANT_ID + "/indexes/"
-        + INDEX_NAME + "?rule=" + rule + "&searchinstanceid=" + instanceId;
+    String customURL = "https://commerce.bing.com/api/customization/v1/businessrules/rule/" + TENANT_ID
+    + "/indexes/" + INDEX_NAME
+    + "?rule=" + rule
+    + "&searchinstanceid=" + instanceId;
 
     try {
       URL url = new URL(customURL);
@@ -257,8 +260,8 @@ public class CutomizationAPISample {
       String json = new ObjectMapper().writeValueAsString(POST_PARAMS);
       System.out.println(json);
 
-      String customURL = "https://commerce.bing.com/api/customization/v1/synonym/" + TENANT_ID + "/indexes/"
-          + INDEX_NAME;
+      String customURL = "https://commerce.bing.com/api/customization/v1/synonym/" + TENANT_ID
+      + "/indexes/"+ INDEX_NAME;
       URL obj = new URL(customURL);
 
       HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
@@ -285,8 +288,9 @@ public class CutomizationAPISample {
     String instanceId = "BlackFridaySettings";
 
     try {
-      String customURL = "https://commerce.bing.com/api/customization/v1/synonym/" + TENANT_ID + "/indexes/"
-          + INDEX_NAME + "?searchinstanceid=" + instanceId;
+      String customURL = "https://commerce.bing.com/api/customization/v1/synonym/"+ TENANT_ID
+      + "/indexes/" + INDEX_NAME
+      + "?searchinstanceid=" + instanceId;
       URL url = new URL(customURL);
 
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -322,8 +326,10 @@ public class CutomizationAPISample {
   public static void deleteSynonym() throws IOException {
     String instanceId = "BlackFridaySettings";
     String synonymId = "outerwear";
-    String customURL = "https://commerce.bing.com/api/customization/v1/synonym/" + TENANT_ID + "/indexes/" + INDEX_NAME
-        + "?synonymid=" + synonymId + "&searchinstanceid=" + instanceId;
+    String customURL = "https://commerce.bing.com/api/customization/v1/synonym/"+ TENANT_ID
+    + "/indexes/" + INDEX_NAME
+    + "?synonymid=" + synonymId
+    + "&searchinstanceid=" + instanceId;
 
     try {
       URL url = new URL(customURL);
@@ -359,7 +365,6 @@ public class CutomizationAPISample {
   }
 
   public static void updateRedirects() throws IOException {
-
     Dictionary Search_Condition = new Hashtable();
     Search_Condition.put("_type", "StringCondition");
     Search_Condition.put("field", "query");
@@ -373,8 +378,8 @@ public class CutomizationAPISample {
 
     String json = new ObjectMapper().writeValueAsString(POST_PARAMS);
 
-    String customURL = "https://commerce.bing.com/api/customization/v1/redirect/" + TENANT_ID + "/indexes/"
-        + INDEX_NAME;
+    String customURL = "https://commerce.bing.com/api/customization/v1/redirect/"+ TENANT_ID
+    + "/indexes/" + INDEX_NAME;
 
     URL obj = new URL(customURL);
     HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
@@ -398,8 +403,9 @@ public class CutomizationAPISample {
     String instanceId = "BlackFridaySettings";
 
     try {
-      String customURL = "https://commerce.bing.com/api/customization/v1/redirect/" + TENANT_ID + "/indexes/"
-          + INDEX_NAME + "?searchinstanceid=" + instanceId;
+      String customURL = "https://commerce.bing.com/api/customization/v1/redirect/"+ TENANT_ID
+      + "/indexes/" + INDEX_NAME
+      + "?searchinstanceid=" + instanceId;
       URL url = new URL(customURL);
 
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -437,8 +443,11 @@ public class CutomizationAPISample {
     String redirectId = "ClothingRedirect";
 
     try {
-      String customURL = "https://commerce.bing.com/api/customization/v1/redirect/" + TENANT_ID + "/indexes/"
-          + INDEX_NAME + "?redirectId=" + redirectId + "&searchinstanceid=" + instanceId;
+      String customURL = "https://commerce.bing.com/api/customization/v1/redirect/"+ TENANT_ID
+      + "/indexes/" + INDEX_NAME 
+      + "?redirectId="+ redirectId
+      + "&searchinstanceid=" + instanceId;
+
       URL url = new URL(customURL);
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod("DELETE");
@@ -513,8 +522,8 @@ public class CutomizationAPISample {
     POST_PARAMS.put("EndTimeUtc", "20201231180000");
 
     String json = new ObjectMapper().writeValueAsString(POST_PARAMS);
-    String customURL = "https://commerce.bing.com/api/customization/v1/businessrules/rule/" + TENANT_ID + "/indexes/"
-        + INDEX_NAME;
+    String customURL = "https://commerce.bing.com/api/customization/v1/businessrules/rule/" + TENANT_ID
+    + "/indexes/" + INDEX_NAME;
     URL obj = new URL(customURL);
 
     HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
