@@ -42,9 +42,7 @@ public class AutoSuggestAPISample {
       while ((output = br.readLine()) != null) {
         System.out.println(output);
       }
-
       conn.disconnect();
-
     } catch (MalformedURLException e) {
       e.printStackTrace();
     } catch (IOException e) {
@@ -75,9 +73,7 @@ public class AutoSuggestAPISample {
       while ((output = br.readLine()) != null) {
         System.out.println(output);
       }
-
       conn.disconnect();
-
     } catch (MalformedURLException e) {
       e.printStackTrace();
     } catch (IOException e) {
@@ -107,9 +103,7 @@ public class AutoSuggestAPISample {
       while ((output = br.readLine()) != null) {
         System.out.println(output);
       }
-
       conn.disconnect();
-
     } catch (MalformedURLException e) {
       e.printStackTrace();
     } catch (IOException e) {
@@ -167,7 +161,6 @@ public class AutoSuggestAPISample {
       while ((output = br.readLine()) != null) {
         System.out.println(output);
       }
-
       conn.disconnect();
     } catch (MalformedURLException e) {
       e.printStackTrace();
@@ -199,7 +192,6 @@ public class AutoSuggestAPISample {
       while ((output = br.readLine()) != null) {
         System.out.println(output);
       }
-
       conn.disconnect();
     } catch (MalformedURLException e) {
       e.printStackTrace();
