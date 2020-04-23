@@ -142,7 +142,6 @@ public class AutoSuggestAPISample {
     int responseCode = postConnection.getResponseCode();
     System.out.println("POST Response Code :  " + responseCode);
     System.out.println("POST Response Message : " + postConnection.getResponseMessage());
-
   }
 
   public static void deleteIndex() throws IOException {
@@ -210,16 +209,16 @@ public class AutoSuggestAPISample {
   }
 
   public static void createBlockedSuggestions() throws IOException {
-    Dictionary bS1 = new Hashtable();
-    bS1.put("query", "example");
-    bS1.put("matchingtype", "Exact");
+    Dictionary blockedSuggestion1 = new Hashtable();
+    blockedSuggestion1.put("query", "example");
+    blockedSuggestion1.put("matchingtype", "Exact");
 
-    Dictionary bS2 = new Hashtable();
-    bS2.put("query", "blocked suggestion");
-    bS2.put("matchingtype", "Contains");
+    Dictionary blockedSuggestion2 = new Hashtable();
+    blockedSuggestion2.put("query", "blocked suggestion");
+    blockedSuggestion2.put("matchingtype", "Contains");
 
     Dictionary POST_PARAMS = new Hashtable();
-    POST_PARAMS.put("BlockedSuggestions", Arrays.asList(bS1, bS2));
+    POST_PARAMS.put("BlockedSuggestions", Arrays.asList(blockedSuggestion1, blockedSuggestion2));
 
     String json = new ObjectMapper().writeValueAsString(POST_PARAMS);
 
@@ -272,7 +271,6 @@ public class AutoSuggestAPISample {
     int responseCode = postConnection.getResponseCode();
     System.out.println("POST Response Code :  " + responseCode);
     System.out.println("POST Response Message : " + postConnection.getResponseMessage());
-
   }
 
   public static void deleteBlockedSuggestions() throws IOException {

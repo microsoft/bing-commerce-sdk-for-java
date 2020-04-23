@@ -50,15 +50,10 @@ public class CutomizationAPISample {
       }
 
       conn.disconnect();
-
     } catch (MalformedURLException e) {
-
       e.printStackTrace();
-
     } catch (IOException e) {
-
       e.printStackTrace();
-
     }
   }
 
@@ -91,12 +86,12 @@ public class CutomizationAPISample {
   }
 
   public static void deleteSearchInstance() throws IOException {
-    String instanceId = "BlackFridaySettings";
-    String customURL = "https://commerce.bing.com/api/customization/v1/searchinstance/" + TENANT_ID
-    + "/indexes/" + INDEX_NAME
-    + "?searchinstanceid=" + instanceId;
-
     try {
+      String instanceId = "BlackFridaySettings";
+      String customURL = "https://commerce.bing.com/api/customization/v1/searchinstance/" + TENANT_ID 
+      + "/indexes/" + INDEX_NAME
+      + "?searchinstanceid=" + instanceId;
+
       URL url = new URL(customURL);
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod("DELETE");
@@ -116,22 +111,16 @@ public class CutomizationAPISample {
       }
 
       conn.disconnect();
-
     } catch (MalformedURLException e) {
-
       e.printStackTrace();
-
     } catch (IOException e) {
-
       e.printStackTrace();
-
     }
-
   }
 
   public static void getAllRule() {
-    String instanceId = "BlackFridaySettings";
     try {
+      String instanceId = "BlackFridaySettings";
       String customURL = "https://commerce.bing.com/api/customization/v1/businessrules/rules/" + TENANT_ID
       + "/indexes/" + INDEX_NAME
       + "?searchinstanceid=" + instanceId;
@@ -155,23 +144,17 @@ public class CutomizationAPISample {
       }
 
       conn.disconnect();
-
     } catch (MalformedURLException e) {
-
       e.printStackTrace();
-
     } catch (IOException e) {
-
       e.printStackTrace();
-
     }
-
   }
 
   public static void getRule() {
-    String instanceId = "BlackFridaySettings";
-    String rule = "ruleclothing";
     try {
+      String instanceId = "BlackFridaySettings";
+      String rule = "ruleclothing";
       String customURL = "https://commerce.bing.com/api/customization/v1/businessrules/rule/" + TENANT_ID
       + "/indexes/" + INDEX_NAME
       + "?rule=" + rule
@@ -194,31 +177,24 @@ public class CutomizationAPISample {
       while ((output = br.readLine()) != null) {
         System.out.println(output);
       }
-
       conn.disconnect();
-
     } catch (MalformedURLException e) {
-
       e.printStackTrace();
-
     } catch (IOException e) {
-
       e.printStackTrace();
-
     }
-
   }
 
   public static void deleteRule() throws IOException {
-    String instanceId = "BlackFridaySettings";
-    String rule = "ruleclothing";
-    String customURL = "https://commerce.bing.com/api/customization/v1/businessrules/rule/" + TENANT_ID
-    + "/indexes/" + INDEX_NAME
-    + "?rule=" + rule
-    + "&searchinstanceid=" + instanceId;
-
     try {
+      String instanceId = "BlackFridaySettings";
+      String rule = "ruleclothing";
+      String customURL = "https://commerce.bing.com/api/customization/v1/businessrules/rule/" + TENANT_ID
+      + "/indexes/" + INDEX_NAME
+      + "?rule=" + rule
+      + "&searchinstanceid=" + instanceId;
       URL url = new URL(customURL);
+
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod("DELETE");
       conn.setRequestProperty("Accept", "application/json");
@@ -235,19 +211,12 @@ public class CutomizationAPISample {
       while ((output = br.readLine()) != null) {
         System.out.println(output);
       }
-
       conn.disconnect();
-
     } catch (MalformedURLException e) {
-
       e.printStackTrace();
-
     } catch (IOException e) {
-
       e.printStackTrace();
-
     }
-
   }
 
   public static void addSynonyms() throws IOException {
@@ -281,13 +250,11 @@ public class CutomizationAPISample {
     } catch (Exception e) {
       e.printStackTrace();
     }
-
   }
 
   public static void getSynonyms() {
-    String instanceId = "BlackFridaySettings";
-
     try {
+      String instanceId = "BlackFridaySettings";
       String customURL = "https://commerce.bing.com/api/customization/v1/synonym/"+ TENANT_ID
       + "/indexes/" + INDEX_NAME
       + "?searchinstanceid=" + instanceId;
@@ -313,26 +280,22 @@ public class CutomizationAPISample {
       conn.disconnect();
 
     } catch (MalformedURLException e) {
-
       e.printStackTrace();
-
     } catch (IOException e) {
-
       e.printStackTrace();
-
     }
   }
 
   public static void deleteSynonym() throws IOException {
-    String instanceId = "BlackFridaySettings";
-    String synonymId = "outerwear";
-    String customURL = "https://commerce.bing.com/api/customization/v1/synonym/"+ TENANT_ID
-    + "/indexes/" + INDEX_NAME
-    + "?synonymid=" + synonymId
-    + "&searchinstanceid=" + instanceId;
-
     try {
+      String instanceId = "BlackFridaySettings";
+      String synonymId = "outerwear";
+      String customURL = "https://commerce.bing.com/api/customization/v1/synonym/"+ TENANT_ID
+      + "/indexes/" + INDEX_NAME
+      + "?synonymid=" + synonymId
+      + "&searchinstanceid=" + instanceId;
       URL url = new URL(customURL);
+      
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod("DELETE");
       conn.setRequestProperty("Accept", "application/json");
@@ -351,20 +314,15 @@ public class CutomizationAPISample {
       }
 
       conn.disconnect();
-
     } catch (MalformedURLException e) {
-
       e.printStackTrace();
-
     } catch (IOException e) {
-
       e.printStackTrace();
-
     }
-
   }
 
   public static void updateRedirects() throws IOException {
+    try{
     Dictionary Search_Condition = new Hashtable();
     Search_Condition.put("_type", "StringCondition");
     Search_Condition.put("field", "query");
@@ -396,13 +354,15 @@ public class CutomizationAPISample {
     int responseCode = postConnection.getResponseCode();
     System.out.println("POST Response Code :  " + responseCode);
     System.out.println("POST Response Message : " + postConnection.getResponseMessage());
-
+    }
+    catch(Exception ex){
+      ex.printStackTrace();
+    }
   }
 
   public static void getRedirect() {
-    String instanceId = "BlackFridaySettings";
-
     try {
+      String instanceId = "BlackFridaySettings";
       String customURL = "https://commerce.bing.com/api/customization/v1/redirect/"+ TENANT_ID
       + "/indexes/" + INDEX_NAME
       + "?searchinstanceid=" + instanceId;
@@ -424,25 +384,18 @@ public class CutomizationAPISample {
       while ((output = br.readLine()) != null) {
         System.out.println(output);
       }
-
       conn.disconnect();
-
     } catch (MalformedURLException e) {
-
       e.printStackTrace();
-
     } catch (IOException e) {
-
       e.printStackTrace();
-
     }
   }
 
   public static void deleteRedirect() throws IOException {
-    String instanceId = "BlackFridaySettings";
-    String redirectId = "ClothingRedirect";
-
     try {
+      String instanceId = "BlackFridaySettings";
+      String redirectId = "ClothingRedirect";
       String customURL = "https://commerce.bing.com/api/customization/v1/redirect/"+ TENANT_ID
       + "/indexes/" + INDEX_NAME 
       + "?redirectId="+ redirectId
@@ -467,78 +420,77 @@ public class CutomizationAPISample {
       }
 
       conn.disconnect();
-
     } catch (MalformedURLException e) {
-
       e.printStackTrace();
-
     } catch (IOException e) {
-
       e.printStackTrace();
-
     }
-
   }
 
   public static void createUpdateARulePost() throws IOException {
-    Dictionary Search_Request = new Hashtable();
-    Search_Request.put("_type", "StringSetCondition");
-    Search_Request.put("field", "query");
-    Search_Request.put("values", Arrays.asList("shirts", "coats", "*"));
+    try{
+      Dictionary Search_Request = new Hashtable();
+      Search_Request.put("_type", "StringSetCondition");
+      Search_Request.put("field", "query");
+      Search_Request.put("values", Arrays.asList("shirts", "coats", "*"));
 
-    Dictionary banner = new Hashtable();
-    banner.put("type", "PlainText");
-    banner.put("value", "Get 15% off Black Friday deals");
+      Dictionary banner = new Hashtable();
+      banner.put("type", "PlainText");
+      banner.put("value", "Get 15% off Black Friday deals");
 
-    Dictionary boostCondition = new Hashtable();
-    boostCondition.put("_type", "StringCondition");
-    boostCondition.put("field", "brand");
-    boostCondition.put("value", "Fabrikam");
+      Dictionary boostCondition = new Hashtable();
+      boostCondition.put("_type", "StringCondition");
+      boostCondition.put("field", "brand");
+      boostCondition.put("value", "Fabrikam");
 
-    Dictionary boost = new Hashtable();
-    boost.put("boost", 500);
-    boost.put("condition", boostCondition);
+      Dictionary boost = new Hashtable();
+      boost.put("boost", 500);
+      boost.put("condition", boostCondition);
 
-    Dictionary filterCondition = new Hashtable();
-    filterCondition.put("_type", "StringCondition");
-    filterCondition.put("field", "brand");
-    filterCondition.put("operator", "Ne");
-    filterCondition.put("value", "Contoso");
+      Dictionary filterCondition = new Hashtable();
+      filterCondition.put("_type", "StringCondition");
+      filterCondition.put("field", "brand");
+      filterCondition.put("operator", "Ne");
+      filterCondition.put("value", "Contoso");
 
-    Dictionary filter = new Hashtable();
-    filter.put("_type", "ConditionBlock");
-    filter.put("conditions", Arrays.asList(filterCondition));
+      Dictionary filter = new Hashtable();
+      filter.put("_type", "ConditionBlock");
+      filter.put("conditions", Arrays.asList(filterCondition));
 
-    Dictionary POST_PARAMS = new Hashtable();
-    POST_PARAMS.put("searchInstanceId", "BlackFridaySetting");
-    POST_PARAMS.put("Rule", "ruleclothingMSFT");
-    POST_PARAMS.put("Enabled", true);
-    POST_PARAMS.put("description", "Black Friday clothing rule");
-    POST_PARAMS.put("SearchRequestCondition", Search_Request);
-    POST_PARAMS.put("Banner", banner);
-    POST_PARAMS.put("Boosts", Arrays.asList(boost));
-    POST_PARAMS.put("Filter", filter);
-    POST_PARAMS.put("StartTimeUtc", "20200101040000");
-    POST_PARAMS.put("EndTimeUtc", "20201231180000");
+      Dictionary POST_PARAMS = new Hashtable();
+      POST_PARAMS.put("searchInstanceId", "BlackFridaySetting");
+      POST_PARAMS.put("Rule", "ruleclothingMSFT");
+      POST_PARAMS.put("Enabled", true);
+      POST_PARAMS.put("description", "Black Friday clothing rule");
+      POST_PARAMS.put("SearchRequestCondition", Search_Request);
+      POST_PARAMS.put("Banner", banner);
+      POST_PARAMS.put("Boosts", Arrays.asList(boost));
+      POST_PARAMS.put("Filter", filter);
+      POST_PARAMS.put("StartTimeUtc", "20200101040000");
+      POST_PARAMS.put("EndTimeUtc", "20201231180000");
+      
+      String json = new ObjectMapper().writeValueAsString(POST_PARAMS);
+      String customURL = "https://commerce.bing.com/api/customization/v1/businessrules/rule/" + TENANT_ID
+      + "/indexes/" + INDEX_NAME;
+      URL obj = new URL(customURL);
 
-    String json = new ObjectMapper().writeValueAsString(POST_PARAMS);
-    String customURL = "https://commerce.bing.com/api/customization/v1/businessrules/rule/" + TENANT_ID
-    + "/indexes/" + INDEX_NAME;
-    URL obj = new URL(customURL);
+      HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
+      postConnection.setRequestMethod("POST");
+      postConnection.setRequestProperty("Authorization", ACCESS_TOKEN);
+      postConnection.setRequestProperty("Content-Type", "application/json");
+      postConnection.setDoOutput(true);
 
-    HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
-    postConnection.setRequestMethod("POST");
-    postConnection.setRequestProperty("Authorization", ACCESS_TOKEN);
-    postConnection.setRequestProperty("Content-Type", "application/json");
-    postConnection.setDoOutput(true);
+      OutputStream os = postConnection.getOutputStream();
+      os.write(json.getBytes());
+      os.flush();
+      os.close();
 
-    OutputStream os = postConnection.getOutputStream();
-    os.write(json.getBytes());
-    os.flush();
-    os.close();
-
-    int responseCode = postConnection.getResponseCode();
-    System.out.println("POST Response Code :  " + responseCode);
-    System.out.println("POST Response Message : " + postConnection.getResponseMessage());
+      int responseCode = postConnection.getResponseCode();
+      System.out.println("POST Response Code :  " + responseCode);
+      System.out.println("POST Response Message : " + postConnection.getResponseMessage());
+    }
+    catch(Exception ex){
+      ex.printStackTrace();
+    }
   }
 }
