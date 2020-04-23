@@ -7,23 +7,29 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.*;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class AutoSuggestAPISample {
-    private static String indexId = "Index Id";
-    private static String tenantId = "Tenant Id";
-    private static String access_token = "access_token";
-public static void main(String[] args) throws IOException {
-}
+  private final static String TENANT_ID = System.getenv("TENANT_ID");
+  private final static String ACCESS_TOKEN = System.getenv("ACCESS_TOKEN");
+  private final static String INDEX_NAME = System.getenv("Sample_Index");
 
-public static void Request() {
+  public static void main(String[] args) throws IOException {
+  }
+
+  public static void request() {
     try {
-      String customURL = "https://commerce.bing.com/api/autosuggest/v1/"+tenantId+"/indexes/"+indexId+"/?q=Contoso&count=2&source=logs";
-      URL url = new URL(customURL);
+      String customURL = "https://commerce.bing.com/api/autosuggest/v1/"
+      + TENANT_ID + "/indexes/" + INDEX_NAME + "/?q=Contoso&count=2&source=logs";
 
+      URL url = new URL(customURL);
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
       conn.setRequestMethod("GET");
       conn.setRequestProperty("Accept", "application/json");
-      conn.setRequestProperty("Authorization", access_token);
+      conn.setRequestProperty("Authorization", ACCESS_TOKEN);
 
       if (conn.getResponseCode() != 200) {
         throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
@@ -40,28 +46,58 @@ public static void Request() {
       conn.disconnect();
 
     } catch (MalformedURLException e) {
-
       e.printStackTrace();
-
     } catch (IOException e) {
-
       e.printStackTrace();
-
     }
   }
 
-public static void IndexRequests() {
+  public static void indexRequests() {
     try {
-      String customURL = "https://commerce.bing.com/api/autosuggestauthoring/v1/"+tenantId+"/indexes/"+indexId;
+      String customURL = "https://commerce.bing.com/api/autosuggestauthoring/v1/"
+      + TENANT_ID + "/indexes/"+ INDEX_NAME;
       URL url = new URL(customURL);
 
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod("GET");
       conn.setRequestProperty("Accept", "application/json");
-      conn.setRequestProperty("Authorization", access_token);
+      conn.setRequestProperty("Authorization", ACCESS_TOKEN);
 
       if (conn.getResponseCode() != 200) {
         throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+      }
+
+      BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+
+      String output;
+      System.out.println("Output from Server .... \n");
+
+      while ((output = br.readLine()) != null) {
+        System.out.println(output);
+      }
+
+      conn.disconnect();
+
+    } catch (MalformedURLException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static void getIndex() {
+    try {
+      String customURL = "https://commerce.bing.com/api/autosuggestauthoring/v1/"
+      + TENANT_ID + "/indexes/"+ INDEX_NAME;
+      URL url = new URL(customURL);
+
+      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+      conn.setRequestMethod("GET");
+      conn.setRequestProperty("Accept", "application/json");
+      conn.setRequestProperty("Authorization", ACCESS_TOKEN);
+
+      if (conn.getResponseCode() != 200) {
+        throw new RuntimeException("Faile : HTTP error code : " + conn.getResponseCode());
       }
 
       BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
@@ -75,67 +111,31 @@ public static void IndexRequests() {
       conn.disconnect();
 
     } catch (MalformedURLException e) {
-
       e.printStackTrace();
-
     } catch (IOException e) {
-
       e.printStackTrace();
-
     }
   }
 
-public static void GetIndex() {
-    try {
-      String customURL = "https://commerce.bing.com/api/autosuggestauthoring/v1/"+tenantId+"/indexes/"+indexId;
-      URL url = new URL(customURL);
+  public static void addUpdateIndexAsync() throws IOException {
+    Dictionary POST_PARAMS = new Hashtable();
+    POST_PARAMS.put("enabled", true);
+    POST_PARAMS.put("customFilters", Arrays.asList("brand", "brand"));
 
-      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-      conn.setRequestMethod("GET");
-      conn.setRequestProperty("Accept", "application/json");
-      conn.setRequestProperty("Authorization", access_token);
-
-      if (conn.getResponseCode() != 200) {
-        throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
-      }
-
-      BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
-
-      String output;
-      System.out.println("Output from Server .... \n");
-      while ((output = br.readLine()) != null) {
-        System.out.println(output);
-      }
-
-      conn.disconnect();
-
-    } catch (MalformedURLException e) {
-
-      e.printStackTrace();
-
-    } catch (IOException e) {
-
-      e.printStackTrace();
-
-    }
-  }
-
-public static void Add_UpdateIndexAsync() throws IOException {
+    String json = new ObjectMapper().writeValueAsString(POST_PARAMS);
     
-    final String POST_PARAMS = "{\n" + "    \"enabled\": true,\r\n"
-                                    + "    \"customFilters\":[\"brand\",\"model\"]\n}";
-    
-    String customURL = "https://commerce.bing.com/api/autosuggestauthoring/v1/"+tenantId+"/indexes/"+indexId;
+    String customURL = "https://commerce.bing.com/api/autosuggestauthoring/v1/"
+    + TENANT_ID + "/indexes/" + INDEX_NAME;
     URL obj = new URL(customURL);
 
     HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
     postConnection.setRequestMethod("PUT");
-    postConnection.setRequestProperty("Authorization", access_token);
+    postConnection.setRequestProperty("Authorization", ACCESS_TOKEN);
     postConnection.setRequestProperty("Content-Type", "application/json");
-
     postConnection.setDoOutput(true);
+
     OutputStream os = postConnection.getOutputStream();
-    os.write(POST_PARAMS.getBytes());
+    os.write(json.getBytes());
     os.flush();
     os.close();
 
@@ -145,16 +145,16 @@ public static void Add_UpdateIndexAsync() throws IOException {
 
   }
 
-public static void DeleteIndex() throws IOException {
-    
-    String customURL = "https://commerce.bing.com/api/autosuggestauthoring/v1/"+tenantId+"/indexes/"+indexId;
+  public static void deleteIndex() throws IOException {
+    String customURL = "https://commerce.bing.com/api/autosuggestauthoring/v1/"
+    + TENANT_ID + "/indexes/" + INDEX_NAME;
+    URL url = new URL(customURL);
 
     try {
-      URL url = new URL(customURL);
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod("DELETE");
       conn.setRequestProperty("Accept", "application/json");
-      conn.setRequestProperty("Authorization", access_token);
+      conn.setRequestProperty("Authorization", ACCESS_TOKEN);
 
       if (conn.getResponseCode() != 200) {
         throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
@@ -164,33 +164,29 @@ public static void DeleteIndex() throws IOException {
 
       String output;
       System.out.println("Output from Server .... \n");
+
       while ((output = br.readLine()) != null) {
         System.out.println(output);
       }
 
       conn.disconnect();
-
     } catch (MalformedURLException e) {
-
       e.printStackTrace();
-
     } catch (IOException e) {
-
       e.printStackTrace();
-
     }
-
   }
 
-public static void GetBlockedSuggestions() {
+  public static void getBlockedSuggestions() {
     try {
-      String customURL = "https://commerce.bing.com/api/autosuggestauthoring/v1/"+tenantId+"/indexes/"+indexId+"/blocking";
+      String customURL = "https://commerce.bing.com/api/autosuggestauthoring/v1/"
+      + TENANT_ID + "/indexes/" + INDEX_NAME + "/blocking";
       URL url = new URL(customURL);
 
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod("GET");
       conn.setRequestProperty("Accept", "application/json");
-      conn.setRequestProperty("Authorization", access_token);
+      conn.setRequestProperty("Authorization", ACCESS_TOKEN);
 
       if (conn.getResponseCode() != 200) {
         throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
@@ -200,67 +196,76 @@ public static void GetBlockedSuggestions() {
 
       String output;
       System.out.println("Output from Server .... \n");
+
       while ((output = br.readLine()) != null) {
         System.out.println(output);
       }
 
       conn.disconnect();
-
     } catch (MalformedURLException e) {
-
       e.printStackTrace();
-
     } catch (IOException e) {
-
       e.printStackTrace();
-
     }
   }
 
-public static void CreateBlockedSuggestions() throws IOException {
-    
-    final String POST_PARAMS = "{\n" 
-                                 + "\"BlockedSuggestions\":\n[\n{\"query\":\"example\",\n\r\"matchingtype\":\"Exact\"},\n"
-                                 + "{\"query\":\"blocked suggestion\",\r\n\"matchingtype\":\"Contains\"}    \n]\n\r}";
-    
-    String customURL = "https://commerce.bing.com/api/autosuggestauthoring/v1/"+tenantId+"/indexes/"+indexId+"/blocking";
+  public static void createBlockedSuggestions() throws IOException {
+    Dictionary bS1 = new Hashtable();
+    bS1.put("query", "example");
+    bS1.put("matchingtype", "Exact");
+
+    Dictionary bS2 = new Hashtable();
+    bS2.put("query", "blocked suggestion");
+    bS2.put("matchingtype", "Contains");
+
+    Dictionary POST_PARAMS = new Hashtable();
+    POST_PARAMS.put("BlockedSuggestions", Arrays.asList(bS1, bS2));
+
+    String json = new ObjectMapper().writeValueAsString(POST_PARAMS);
+
+    String customURL = "https://commerce.bing.com/api/autosuggestauthoring/v1/"
+    + TENANT_ID + "/indexes/" + INDEX_NAME + "/blocking";
     URL obj = new URL(customURL);
 
     HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
     postConnection.setRequestMethod("POST");
-    postConnection.setRequestProperty("Authorization", access_token);
+    postConnection.setRequestProperty("Authorization", ACCESS_TOKEN);
     postConnection.setRequestProperty("Content-Type", "application/json");
-
     postConnection.setDoOutput(true);
+
     OutputStream os = postConnection.getOutputStream();
-    os.write(POST_PARAMS.getBytes());
+    os.write(json.getBytes());
     os.flush();
     os.close();
 
     int responseCode = postConnection.getResponseCode();
     System.out.println("POST Response Code :  " + responseCode);
     System.out.println("POST Response Message : " + postConnection.getResponseMessage());
-
   }
 
-public static void UpdateBlockedSuggestions() throws IOException {
-    
-    final String POST_PARAMS = "{\n" + "    \"BlockedSuggestions\":\n "
-                                +"  [\n    {\n\r    \"id\":\"85e1d36d-c044-408e-9bc4-1696c3460f57\","
-                                    +"\n    \"query\":\"blocked suggestion\","
-                                    +"\n    \"matchingType\":\"Contains\"\n    }\n  ]\n}";
-    
-    String customURL = "https://commerce.bing.com/api/autosuggestauthoring/v1/"+tenantId+"/indexes/"+indexId+"/blocking";    
+  public static void updateBlockedSuggestions() throws IOException {
+    Dictionary bs1 = new Hashtable();
+    bs1.put("id", "85e1d36d-c044-408e-9bc4-1696c3460f57");
+    bs1.put("query", "blocked suggestion");
+    bs1.put("matchingType", "Contains");
+
+    Dictionary POST_PARAMS = new Hashtable();
+    POST_PARAMS.put("BlockedSuggestions", Arrays.asList(bs1));
+
+    String json = new ObjectMapper().writeValueAsString(POST_PARAMS);
+
+    String customURL = "https://commerce.bing.com/api/autosuggestauthoring/v1/"
+    + TENANT_ID + "/indexes/" + INDEX_NAME + "/blocking";
     URL obj = new URL(customURL);
 
     HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
     postConnection.setRequestMethod("PUT");
-    postConnection.setRequestProperty("Authorization", access_token);
+    postConnection.setRequestProperty("Authorization", ACCESS_TOKEN);
     postConnection.setRequestProperty("Content-Type", "application/json");
-
     postConnection.setDoOutput(true);
+
     OutputStream os = postConnection.getOutputStream();
-    os.write(POST_PARAMS.getBytes());
+    os.write(json.getBytes());
     os.flush();
     os.close();
 
@@ -270,27 +275,29 @@ public static void UpdateBlockedSuggestions() throws IOException {
 
   }
 
-public static void DeleteBlockedSuggestions() throws IOException {
-   
-    final String POST_PARAMS = "{\n" + "    \"ids\":\n "
-    +"  [\n     \"87e1d36d-c944-404e-9bc4-1695c3460h57\"\n  ]  \n}";
+  public static void deleteBlockedSuggestions() throws IOException {
+    Dictionary POST_PARAMS = new Hashtable();
+    POST_PARAMS.put("ids", Arrays.asList("87e1d36d-c944-404e-9bc4-1695c3460h57"));
 
-String customURL = "https://www.bingapis.com/api/v1/retail/autosuggestauthoring/"+tenantId+"/indexes/"+indexId+"/blocking";
-URL obj = new URL(customURL);
+    String json = new ObjectMapper().writeValueAsString(POST_PARAMS);
 
-HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
-postConnection.setRequestMethod("DELETE");
-postConnection.setRequestProperty("Authorization", access_token);
-postConnection.setRequestProperty("Content-Type", "application/json");
+    String customURL = "https://www.bingapis.com/api/v1/retail/autosuggestauthoring/"
+    + TENANT_ID + "/indexes/"+ INDEX_NAME + "/blocking";
+    URL obj = new URL(customURL);
 
-postConnection.setDoOutput(true);
-OutputStream os = postConnection.getOutputStream();
-os.write(POST_PARAMS.getBytes());
-os.flush();
-os.close();
+    HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
+    postConnection.setRequestMethod("DELETE");
+    postConnection.setRequestProperty("Authorization", ACCESS_TOKEN);
+    postConnection.setRequestProperty("Content-Type", "application/json");
+    postConnection.setDoOutput(true);
 
-int responseCode = postConnection.getResponseCode();
-System.out.println("POST Response Code :  " + responseCode);
-System.out.println("POST Response Message : " + postConnection.getResponseMessage());
+    OutputStream os = postConnection.getOutputStream();
+    os.write(json.getBytes());
+    os.flush();
+    os.close();
+
+    int responseCode = postConnection.getResponseCode();
+    System.out.println("POST Response Code :  " + responseCode);
+    System.out.println("POST Response Message : " + postConnection.getResponseMessage());
   }
 }

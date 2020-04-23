@@ -7,26 +7,36 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Dictionary;
+import java.util.Hashtable;
+import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.util.concurrent.CycleDetectingLockFactory.Policies;
+import com.microsoft.bing.commerce.search.models.BoostExpression;
+
+import retrofit2.http.POST;
 
 public class CutomizationAPISample {
-  private static String tenantId = "Tenant ID";
-  private static String indexId = "Index ID";
-  private static String access_token = "Access Token";
+  private final static String TENANT_ID = System.getenv("TENANT_ID");
+  private final static String ACCESS_TOKEN = System.getenv("ACCESS_TOKEN");
+  private final static String INDEX_NAME = System.getenv("Sample_Index");
 
   public static void main(String[] args) throws IOException {
+
   }
 
-  public static void GetSearchInstanceAsync() {
+  public static void getSearchInstance() {
     try {
       String customURL = "https://commerce.bing.com/api/customization/v1/searchinstance/"
-                         + tenantId + "/indexes/"+ indexId;
-      URL url = new URL(customURL);
+      + TENANT_ID + "/indexes/"+ INDEX_NAME;
 
+      URL url = new URL(customURL);
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod("GET");
       conn.setRequestProperty("Accept", "application/json");
-      conn.setRequestProperty("Authorization", access_token);
+      conn.setRequestProperty("Authorization", ACCESS_TOKEN);
 
       if (conn.getResponseCode() != 200) {
         throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
@@ -53,42 +63,47 @@ public class CutomizationAPISample {
     }
   }
 
-  public static void CreateSearchInstanceAsync() throws IOException {
-    
-    final String POST_PARAMS = "{\n" + "    \"searchinstanceId\": \"BlackFridaySetting\",\r\n" + "\n}";
-    
-    String customURL = "https://commerce.bing.com/api/customization/v1/searchinstance/"
-                         + tenantId + "/indexes/"+ indexId;
+  public static void createSearchInstance() throws IOException {
+    try {
+      Dictionary POST_PARAMS = new Hashtable();
+      POST_PARAMS.put("searchinstanceId", "BlackFridaySettings");
+      String json = new ObjectMapper().writeValueAsString(POST_PARAMS);
 
-    URL obj = new URL(customURL);
-    HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
-    postConnection.setRequestMethod("POST");
-    postConnection.setRequestProperty("Authorization", access_token);
-    postConnection.setRequestProperty("Content-Type", "application/json");
+      String customURL = "https://commerce.bing.com/api/customization/v1/searchinstance/"
+      + TENANT_ID + "/indexes/"+ INDEX_NAME;
+      URL obj = new URL(customURL);
 
-    postConnection.setDoOutput(true);
-    OutputStream os = postConnection.getOutputStream();
-    os.write(POST_PARAMS.getBytes());
-    os.flush();
-    os.close();
+      HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
+      postConnection.setRequestMethod("POST");
+      postConnection.setRequestProperty("Authorization", ACCESS_TOKEN);
+      postConnection.setRequestProperty("Content-Type", "application/json");
+      postConnection.setDoOutput(true);
 
-    int responseCode = postConnection.getResponseCode();
-    System.out.println("POST Response Code :  " + responseCode);
-    System.out.println("POST Response Message : " + postConnection.getResponseMessage());
-
+      OutputStream os = postConnection.getOutputStream();
+      os.write(json.getBytes());
+      os.flush();
+      os.close();
+      int responseCode = postConnection.getResponseCode();
+      System.out.println("POST Response Code :  " + responseCode);
+      System.out.println("POST Response Message : " + postConnection.getResponseMessage());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
-  public static void DeleteAsync() throws IOException {
+  public static void deleteSearchInstance() throws IOException {
     String instanceId = "BlackFridaySettings";
     String customURL = "https://commerce.bing.com/api/customization/v1/searchinstance/"
-                         + tenantId + "/indexes/"+ indexId + "?searchinstanceid=" + instanceId;
+    + TENANT_ID + "/indexes/"
+    + INDEX_NAME + "?searchinstanceid="
+    + instanceId;
 
     try {
       URL url = new URL(customURL);
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod("DELETE");
       conn.setRequestProperty("Accept", "application/json");
-      conn.setRequestProperty("Authorization", access_token);
+      conn.setRequestProperty("Authorization", ACCESS_TOKEN);
 
       if (conn.getResponseCode() != 200) {
         throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
@@ -116,17 +131,17 @@ public class CutomizationAPISample {
 
   }
 
-  public static void GetAllRuleAsync() {
+  public static void getAllRule() {
     String instanceId = "BlackFridaySettings";
     try {
-      String customURL = "https://commerce.bing.com/api/customization/v1/businessrules/rules/"
-                        + tenantId + "/indexes/"+ indexId + "?searchinstanceid=" + instanceId;
+      String customURL = "https://commerce.bing.com/api/customization/v1/businessrules/rules/" + TENANT_ID + "/indexes/"
+          + INDEX_NAME + "?searchinstanceid=" + instanceId;
       URL url = new URL(customURL);
 
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod("GET");
       conn.setRequestProperty("Accept", "application/json");
-      conn.setRequestProperty("Authorization", access_token);
+      conn.setRequestProperty("Authorization", ACCESS_TOKEN);
 
       if (conn.getResponseCode() != 200) {
         throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
@@ -154,18 +169,18 @@ public class CutomizationAPISample {
 
   }
 
-  public static void GetRuleAsync() {
+  public static void getRule() {
     String instanceId = "BlackFridaySettings";
     String rule = "ruleclothing";
     try {
-      String customURL = "https://commerce.bing.com/api/customization/v1/businessrules/rule/"
-                        +tenantId+"/indexes/"+indexId+"?rule="+rule+"&searchinstanceid="+instanceId;
+      String customURL = "https://commerce.bing.com/api/customization/v1/businessrules/rule/" + TENANT_ID + "/indexes/"
+          + INDEX_NAME + "?rule=" + rule + "&searchinstanceid=" + instanceId;
       URL url = new URL(customURL);
 
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod("GET");
       conn.setRequestProperty("Accept", "application/json");
-      conn.setRequestProperty("Authorization", access_token);
+      conn.setRequestProperty("Authorization", ACCESS_TOKEN);
 
       if (conn.getResponseCode() != 200) {
         throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
@@ -193,18 +208,18 @@ public class CutomizationAPISample {
 
   }
 
-  public static void DeleteRule_Async() throws IOException {
+  public static void deleteRule() throws IOException {
     String instanceId = "BlackFridaySettings";
     String rule = "ruleclothing";
-    String customURL = "https://commerce.bing.com/api/customization/v1/businessrules/rule/"+
-    tenantId+"/indexes/"+indexId+"?rule="+rule+"&searchinstanceid="+instanceId;
+    String customURL = "https://commerce.bing.com/api/customization/v1/businessrules/rule/" + TENANT_ID + "/indexes/"
+        + INDEX_NAME + "?rule=" + rule + "&searchinstanceid=" + instanceId;
 
     try {
       URL url = new URL(customURL);
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod("DELETE");
       conn.setRequestProperty("Accept", "application/json");
-      conn.setRequestProperty("Authorization", access_token);
+      conn.setRequestProperty("Authorization", ACCESS_TOKEN);
 
       if (conn.getResponseCode() != 200) {
         throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
@@ -232,43 +247,52 @@ public class CutomizationAPISample {
 
   }
 
-  public static void AddSynonyms_Async() throws IOException {
-    final String POST_PARAMS = "{\n" + "    \"searchinstanceId\": \"BlackFridaySettings\",\r\n"
-        + "    \"synonymId\": \"outerwear\",\r\n" + "    \"synonyms\": [\"coat\",\"jacket\",\"suit\"]\r\n" + "\n}";
+  public static void addSynonyms() throws IOException {
+    try {
+      Dictionary POST_PARAMS = new Hashtable();
+      POST_PARAMS.put("searchInstanceId", "BlackFridaySettings");
+      POST_PARAMS.put("synonymId", "outerwear");
+      POST_PARAMS.put("synonyms", Arrays.asList("coat", "jacket", "suit"));
 
-    String customURL = "https://commerce.bing.com/api/customization/v1/synonym/" + tenantId + "/indexes/" + indexId;
+      String json = new ObjectMapper().writeValueAsString(POST_PARAMS);
+      System.out.println(json);
 
-    URL obj = new URL(customURL);
-    HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
-    postConnection.setRequestMethod("POST");
-    postConnection.setRequestProperty("Authorization", access_token);
-    postConnection.setRequestProperty("Content-Type", "application/json");
+      String customURL = "https://commerce.bing.com/api/customization/v1/synonym/" + TENANT_ID + "/indexes/"
+          + INDEX_NAME;
+      URL obj = new URL(customURL);
 
-    postConnection.setDoOutput(true);
-    OutputStream os = postConnection.getOutputStream();
-    os.write(POST_PARAMS.getBytes());
-    os.flush();
-    os.close();
+      HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
+      postConnection.setRequestMethod("POST");
+      postConnection.setRequestProperty("Authorization", ACCESS_TOKEN);
+      postConnection.setRequestProperty("Content-Type", "application/json");
 
-    int responseCode = postConnection.getResponseCode();
-    System.out.println("POST Response Code :  " + responseCode);
-    System.out.println("POST Response Message : " + postConnection.getResponseMessage());
+      postConnection.setDoOutput(true);
+      OutputStream os = postConnection.getOutputStream();
+      os.write(json.getBytes());
+      os.flush();
+      os.close();
+
+      int responseCode = postConnection.getResponseCode();
+      System.out.println("POST Response Code :  " + responseCode);
+      System.out.println("POST Response Message : " + postConnection.getResponseMessage());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
   }
 
-  public static void GetSynonyms_Async() {
+  public static void getSynonyms() {
     String instanceId = "BlackFridaySettings";
 
     try {
-      String customURL = "https://commerce.bing.com/api/customization/v1/synonym/"
-                         + tenantId + "/indexes/" + indexId
-                          + "?searchinstanceid=" + instanceId;
+      String customURL = "https://commerce.bing.com/api/customization/v1/synonym/" + TENANT_ID + "/indexes/"
+          + INDEX_NAME + "?searchinstanceid=" + instanceId;
       URL url = new URL(customURL);
 
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod("GET");
       conn.setRequestProperty("Accept", "application/json");
-      conn.setRequestProperty("Authorization", access_token);
+      conn.setRequestProperty("Authorization", ACCESS_TOKEN);
 
       if (conn.getResponseCode() != 200) {
         throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
@@ -295,19 +319,18 @@ public class CutomizationAPISample {
     }
   }
 
-  public static void DeleteSynAsync() throws IOException {
+  public static void deleteSynonym() throws IOException {
     String instanceId = "BlackFridaySettings";
     String synonymId = "outerwear";
-    String customURL = "https://commerce.bing.com/api/customization/v1/synonym/"
-                      + tenantId + "/indexes/" + indexId
-                          + "?synonymid=" + synonymId + "&searchinstanceid=" + instanceId;
+    String customURL = "https://commerce.bing.com/api/customization/v1/synonym/" + TENANT_ID + "/indexes/" + INDEX_NAME
+        + "?synonymid=" + synonymId + "&searchinstanceid=" + instanceId;
 
     try {
       URL url = new URL(customURL);
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod("DELETE");
       conn.setRequestProperty("Accept", "application/json");
-      conn.setRequestProperty("Authorization", access_token);
+      conn.setRequestProperty("Authorization", ACCESS_TOKEN);
 
       if (conn.getResponseCode() != 200) {
         throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
@@ -335,27 +358,33 @@ public class CutomizationAPISample {
 
   }
 
-  public static void UpdateRedirects_Async() throws IOException {
+  public static void updateRedirects() throws IOException {
 
-    final String POST_PARAMS = "{\n" + "    \"searchinstanceId\": \"BlackFridaySettings\",\r\n"
-        + "    \"RedirectId\": \"ClothingRedirect\",\r\n" + "    \"SearchRequestCondition\": {\n"
-        + "    \"_type\": \"StringCondition\",\r\n" + "    \"field\": \"query\",\r\n"
-        + "    \"value\": \"men shirts\"\r\n" + "\n},\n" +
+    Dictionary Search_Condition = new Hashtable();
+    Search_Condition.put("_type", "StringCondition");
+    Search_Condition.put("field", "query");
+    Search_Condition.put("value", "men shirts");
 
-        "    \"RedirectUrl\": \"https://www.contoso.com/menshirts\"\r\n}";
+    Dictionary POST_PARAMS = new Hashtable();
+    POST_PARAMS.put("searchInstanceId", "BlackFridaySettingMSFT");
+    POST_PARAMS.put("RedirectId", "ClothingRedirect");
+    POST_PARAMS.put("SearchRequestCondition", Search_Condition);
+    POST_PARAMS.put("RedirectUrl", "https://www.contoso.com/menshirts");
 
-    String customURL = "https://commerce.bing.com/api/customization/v1/redirect/" + tenantId +
-                       "/indexes/" + indexId;
+    String json = new ObjectMapper().writeValueAsString(POST_PARAMS);
+
+    String customURL = "https://commerce.bing.com/api/customization/v1/redirect/" + TENANT_ID + "/indexes/"
+        + INDEX_NAME;
 
     URL obj = new URL(customURL);
     HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
     postConnection.setRequestMethod("POST");
-    postConnection.setRequestProperty("Authorization", access_token);
+    postConnection.setRequestProperty("Authorization", ACCESS_TOKEN);
     postConnection.setRequestProperty("Content-Type", "application/json");
 
     postConnection.setDoOutput(true);
     OutputStream os = postConnection.getOutputStream();
-    os.write(POST_PARAMS.getBytes());
+    os.write(json.getBytes());
     os.flush();
     os.close();
 
@@ -365,20 +394,18 @@ public class CutomizationAPISample {
 
   }
 
-  public static void GetRedirectAsync() {
+  public static void getRedirect() {
     String instanceId = "BlackFridaySettings";
 
     try {
-      String customURL = "https://commerce.bing.com/api/customization/v1/redirect/" 
-                        + tenantId + "/indexes/" + indexId
-                            + "?searchinstanceid=" + instanceId;
-
+      String customURL = "https://commerce.bing.com/api/customization/v1/redirect/" + TENANT_ID + "/indexes/"
+          + INDEX_NAME + "?searchinstanceid=" + instanceId;
       URL url = new URL(customURL);
 
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod("GET");
       conn.setRequestProperty("Accept", "application/json");
-      conn.setRequestProperty("Authorization", access_token);
+      conn.setRequestProperty("Authorization", ACCESS_TOKEN);
 
       if (conn.getResponseCode() != 200) {
         throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
@@ -405,19 +432,18 @@ public class CutomizationAPISample {
     }
   }
 
-  public static void DeleteRedirect() throws IOException {
+  public static void deleteRedirect() throws IOException {
     String instanceId = "BlackFridaySettings";
     String redirectId = "ClothingRedirect";
-    String customURL = "https://commerce.bing.com/api/customization/v1/redirect/"
-                        + tenantId + "/indexes/" + indexId
-                            + "?redirectId=" + redirectId + "&searchinstanceid=" + instanceId;
 
     try {
+      String customURL = "https://commerce.bing.com/api/customization/v1/redirect/" + TENANT_ID + "/indexes/"
+          + INDEX_NAME + "?redirectId=" + redirectId + "&searchinstanceid=" + instanceId;
       URL url = new URL(customURL);
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod("DELETE");
       conn.setRequestProperty("Accept", "application/json");
-      conn.setRequestProperty("Authorization", access_token);
+      conn.setRequestProperty("Authorization", ACCESS_TOKEN);
 
       if (conn.getResponseCode() != 200) {
         throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
@@ -445,38 +471,65 @@ public class CutomizationAPISample {
 
   }
 
+  public static void createUpdateARulePost() throws IOException {
+    Dictionary Search_Request = new Hashtable();
+    Search_Request.put("_type", "StringSetCondition");
+    Search_Request.put("field", "query");
+    Search_Request.put("values", Arrays.asList("shirts", "coats", "*"));
 
-public static void CreateUpdateARulePostAsync() throws IOException {
+    Dictionary banner = new Hashtable();
+    banner.put("type", "PlainText");
+    banner.put("value", "Get 15% off Black Friday deals");
 
-    final String POST_PARAMS = "{\n" + "    \"SearchInstanceId\": \"BlackFridaySettings\",\r\n"
-        + "    \"Rule\": \"ruleclothing\",\r\n"  
-        + "    \"Enabled\": true,\r\n" 
-        + "    \"description\": \"Black Friday clothing rule\",\r\n" +
-        "    \"SearchRequestCondition\": {\n"
-        + "    \"_type\": \"StringSetCondition\",\r\n" + "    \"field\": \"query\",\r\n"
-        + "    \"values\": [\"shirts\",\"coats\",\"*\"] \r\n" + "\n},\n"
-        +"     \"Banner\":{\"type\":\"PlainText\",\"value\":\"Get 15% off Black Friday deals\"},\r\n"
-        +"     \"Boosts\":[{\"boost\":500,\"condition\":{\"_type\":\"StringCondition\",\r\n\"field\":\"brand\",\r\n\"value\":\"Fabrikam\"} }],\r\n"
-        +"     \"Filter\":{\"_type\":\"ConditionBlock\",\"conditions\":[{\"_type\":\"StringCondition\",\r\n\"field\":\"brand\",\r\n\"operator\":\"Ne\",\r\n\"value\":\"Contoso\"} ]},\r\n"
-        +"    \"StartTimeUtc\": \"20200101040000\",\r\n"
-        +"    \"EndTimeUtc\": \"20201231180000\"\r\n}";
+    Dictionary boostCondition = new Hashtable();
+    boostCondition.put("_type", "StringCondition");
+    boostCondition.put("field", "brand");
+    boostCondition.put("value", "Fabrikam");
 
-    String customURL = "https://commerce.bing.com/api/customization/v1/businessrules/rule/"+tenantId+"/indexes/"+indexId;
+    Dictionary boost = new Hashtable();
+    boost.put("boost", 500);
+    boost.put("condition", boostCondition);
+
+    Dictionary filterCondition = new Hashtable();
+    filterCondition.put("_type", "StringCondition");
+    filterCondition.put("field", "brand");
+    filterCondition.put("operator", "Ne");
+    filterCondition.put("value", "Contoso");
+
+    Dictionary filter = new Hashtable();
+    filter.put("_type", "ConditionBlock");
+    filter.put("conditions", Arrays.asList(filterCondition));
+
+    Dictionary POST_PARAMS = new Hashtable();
+    POST_PARAMS.put("searchInstanceId", "BlackFridaySetting");
+    POST_PARAMS.put("Rule", "ruleclothingMSFT");
+    POST_PARAMS.put("Enabled", true);
+    POST_PARAMS.put("description", "Black Friday clothing rule");
+    POST_PARAMS.put("SearchRequestCondition", Search_Request);
+    POST_PARAMS.put("Banner", banner);
+    POST_PARAMS.put("Boosts", Arrays.asList(boost));
+    POST_PARAMS.put("Filter", filter);
+    POST_PARAMS.put("StartTimeUtc", "20200101040000");
+    POST_PARAMS.put("EndTimeUtc", "20201231180000");
+
+    String json = new ObjectMapper().writeValueAsString(POST_PARAMS);
+    String customURL = "https://commerce.bing.com/api/customization/v1/businessrules/rule/" + TENANT_ID + "/indexes/"
+        + INDEX_NAME;
     URL obj = new URL(customURL);
+
     HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
     postConnection.setRequestMethod("POST");
-    postConnection.setRequestProperty("Authorization", access_token);
+    postConnection.setRequestProperty("Authorization", ACCESS_TOKEN);
     postConnection.setRequestProperty("Content-Type", "application/json");
-
     postConnection.setDoOutput(true);
+
     OutputStream os = postConnection.getOutputStream();
-    os.write(POST_PARAMS.getBytes());
+    os.write(json.getBytes());
     os.flush();
     os.close();
 
     int responseCode = postConnection.getResponseCode();
     System.out.println("POST Response Code :  " + responseCode);
     System.out.println("POST Response Message : " + postConnection.getResponseMessage());
-
   }
 }
