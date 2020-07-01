@@ -114,7 +114,8 @@ public class AutoSuggestAPISample {
   public static void addUpdateIndexAsync() throws IOException {
     Dictionary POST_PARAMS = new Hashtable();
     POST_PARAMS.put("enabled", true);
-    POST_PARAMS.put("customFilters", Arrays.asList("brand", "brand"));
+    POST_PARAMS.put("customFilters", Arrays.asList("Locale", "AverageRatingCountOverall","BasePrice"));
+    POST_PARAMS.put("customPostFilters", Arrays.asList("Locale", "AverageRatingCountOverall","BasePrice","IsMasterProduct","ProductReleaseDate"));
 
     String json = new ObjectMapper().writeValueAsString(POST_PARAMS);
     
