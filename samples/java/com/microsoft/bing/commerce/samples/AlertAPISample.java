@@ -279,5 +279,38 @@ public class AlertAPISample {
           e.printStackTrace();
         }
       }
+
+      //Refresh Token API Code
+      public static void RefreshTokenAPIRequest() throws IOException {
+        try {
+           
+          Dictionary POST_PARAMS = new Hashtable();
+          POST_PARAMS.put("refresh_token", "REFRESH TOKEN");
+          
+          
+          String json = new ObjectMapper().writeValueAsString(POST_PARAMS);
+          System.out.println(json);
+    
+          String customURL = "https://commerce.bing.com/api/admin/v1/tenants/"+TENANT_ID+"/refresh-token";
+          URL obj = new URL(customURL);
+    
+          HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
+          postConnection.setRequestMethod("POST");
+          postConnection.setRequestProperty("Authorization", ACCESS_TOKEN);
+          postConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+    
+          postConnection.setDoOutput(true);
+          OutputStream os = postConnection.getOutputStream();
+          os.write(json.getBytes());
+          os.flush();
+          os.close();
+    
+          int responseCode = postConnection.getResponseCode();
+          System.out.println("POST Response Code :  " + responseCode);
+          System.out.println("POST Response Message : " + postConnection.getResponseMessage());
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
   
 }
