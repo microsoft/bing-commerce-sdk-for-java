@@ -286,8 +286,7 @@ public class AlertAPISample {
            
           Dictionary POST_PARAMS = new Hashtable();
           POST_PARAMS.put("refresh_token", "REFRESH TOKEN");
-          
-          
+        
           String json = new ObjectMapper().writeValueAsString(POST_PARAMS);
           System.out.println(json);
     
