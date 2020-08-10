@@ -5,29 +5,21 @@ import java.util.List;
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.sym.Name;
-
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.microsoft.bing.commerce.ingestion.BingCommerceIngestion;
 import com.microsoft.bing.commerce.ingestion.implementation.BingCommerceIngestionImpl;
 import com.microsoft.bing.commerce.ingestion.models.*;
 
-import com.microsoft.bing.commerce.search.BingCommerceSearch;
-import com.microsoft.bing.commerce.search.implementation.BingCommerceSearchImpl;
-import com.microsoft.bing.commerce.search.models.*;
 import com.microsoft.bing.commerce.search.util.AccessTokenInterceptor;
-import com.microsoft.bing.commerce.search.util.AccessTokenProvider;
 
 public class IngestionSampleCode {
     private final static String TENANT_ID = System.getenv("TENANT_ID");
-    private final static String ACCESS_TOKEN = System.getenv("ACCESS_TOKEN");
-    private final static String INDEX_NAME = System.getenv("Sample_Index");
+    private final static String SUBSCRIPTION_ID = System.getenv("SUBSCRIPTION_ID");
+    private final static String INDEX_NAME = System.getenv("SAMPLE_INDEX");
 
-    public static void main( String[] args ) throws JsonProcessingException {
+    public static void main(String[] args ) throws JsonProcessingException {
         BingCommerceIngestion ingestionClient = createIngestionClient();      
     }
 
@@ -88,16 +80,13 @@ public class IngestionSampleCode {
                         arbitraryNumberField));
                 
         // Create the index
-        IndexResponse createResponse = client.createIndex(TENANT_ID, null,newIndexReq);
+        IndexResponse createResponse = client.createIndex(TENANT_ID, SUBSCRIPTION_ID, newIndexReq);
         createResponse.indexes().get(0).id();
     }
     
     private static void createIndex(BingCommerceIngestion client)
     {
-        List<Region> region = new ArrayList<Region>();
-        region.add(Region.NORTH_CENTRAL_US);
-        region.add(Region.WEST_US);
-        region.add(Region.EAST_US);
+        List<Region> regions = Arrays.asList(Region.NORTH_CENTRAL_US,Region.WEST_US,Region.EAST_US);
 
         IndexField field = new IndexField()
         .withName("productId")
@@ -112,11 +101,10 @@ public class IngestionSampleCode {
         .withName("Contoso")
         .withDescription("Index definition for Contoso.com")
         .withSearchScenario("Retail")
-        .withRegions(region)
+        .withRegions(regions)
         .withFields(Arrays.asList(field));
 
-        IndexResponse createResponse = client.createIndex(TENANT_ID, ACCESS_TOKEN, newIndexReq);
-  
+        IndexResponse createRespon=client.createIndex(TENANT_ID, SUBSCRIPTION_ID, newIndexReq);
     }
 
     private static void updateAnIndex(BingCommerceIngestion client)
@@ -142,18 +130,15 @@ public class IngestionSampleCode {
         .withRegions(region)
         .withFields(Arrays.asList(field));
         
-        IndexResponse createResponse = client.createIndex(TENANT_ID, ACCESS_TOKEN, newIndexReq);
+        IndexResponse createResponse = client.createIndex(TENANT_ID, SUBSCRIPTION_ID, newIndexReq);
         newIndexReq.withFields(Arrays.asList(field));
         IndexResponse updateResponse = client.updateIndex(
-            TENANT_ID, createResponse.indexes().get(0).id(), ACCESS_TOKEN, newIndexReq);
+            TENANT_ID, createResponse.indexes().get(0).id(), SUBSCRIPTION_ID, newIndexReq);
         }
         
     private static void deleteIndex(BingCommerceIngestion client)
     {
-        List<Region> region = new ArrayList<Region>();
-        region.add(Region.NORTH_CENTRAL_US);
-        region.add(Region.WEST_US);
-        region.add(Region.EAST_US);
+        List<Region> regions = Arrays.asList(Region.NORTH_CENTRAL_US,Region.WEST_US,Region.EAST_US);
 
         IndexField field = new IndexField()
         .withName("productId")
@@ -168,10 +153,10 @@ public class IngestionSampleCode {
         .withName("Contoso")
         .withDescription("Index definition for Contoso.com")
         .withSearchScenario("Retail")
-        .withRegions(region)
+        .withRegions(regions)
         .withFields(Arrays.asList(field));
         
-        IndexResponse createResponse = client.createIndex(TENANT_ID, ACCESS_TOKEN, newIndexReq);
+        IndexResponse createResponse = client.createIndex(TENANT_ID, SUBSCRIPTION_ID, newIndexReq);
         IndexResponse deleteResponse = client.deleteIndex(TENANT_ID, createResponse.indexes().get(0).id());
     }
 
@@ -198,7 +183,7 @@ public class IngestionSampleCode {
         .withRegions(region)
         .withFields(Arrays.asList(field));
 
-        IndexResponse createResponse = client.createIndex(TENANT_ID, ACCESS_TOKEN, newIndexReq);
+        IndexResponse createResponse = client.createIndex(TENANT_ID, SUBSCRIPTION_ID, newIndexReq);
         IndexResponse getIndexResponse = client.getIndex(TENANT_ID, createResponse.indexes().get(0).id());
     }
 
@@ -225,7 +210,7 @@ public class IngestionSampleCode {
         .withRegions(region)
         .withFields(Arrays.asList(field));
 
-        IndexResponse createResponse = client.createIndex(TENANT_ID, ACCESS_TOKEN, newIndexReq);
+        IndexResponse createResponse = client.createIndex(TENANT_ID, SUBSCRIPTION_ID, newIndexReq);
         IndexResponse allIndexes = client.getAllIndexes(TENANT_ID);
     }
 
@@ -236,10 +221,10 @@ public class IngestionSampleCode {
     }
 
     private static BingCommerceIngestion createIngestionClient() {
-        System.out.format("Creating the ingestion client with access token %s.\n", ACCESS_TOKEN);
+        System.out.format("Creating the ingestion client with access token %s.\n", SUBSCRIPTION_ID);
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
-                .addInterceptor(new AccessTokenInterceptor( new SimpleAccessTokenProvider(ACCESS_TOKEN) ));
+                .addInterceptor(new AccessTokenInterceptor( new SimpleAccessTokenProvider(SUBSCRIPTION_ID) ));
         Retrofit.Builder retrofit = new Retrofit.Builder();
 
         return new BingCommerceIngestionImpl(httpClient, retrofit);

@@ -1,28 +1,22 @@
 package com.microsoft.bing.commerce.samples;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
 import com.microsoft.bing.commerce.ingestion.BingCommerceIngestion;
 import com.microsoft.bing.commerce.ingestion.implementation.BingCommerceIngestionImpl;
-import com.microsoft.bing.commerce.ingestion.models.*;
-
-import com.microsoft.bing.commerce.search.BingCommerceSearch;
-import com.microsoft.bing.commerce.search.implementation.BingCommerceSearchImpl;
-import com.microsoft.bing.commerce.search.models.*;
+import com.microsoft.bing.commerce.ingestion.models.TransformationConfigResponse;
+import com.microsoft.bing.commerce.ingestion.models.TransformationTryoutResponse;
 import com.microsoft.bing.commerce.search.util.AccessTokenInterceptor;
-import com.microsoft.bing.commerce.search.util.AccessTokenProvider;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 
 public class TSManagementAPISample {
     public final static String TENANT_ID = System.getenv("TENANT_ID");
-    public final static String ACCESS_TOKEN = System.getenv("ACCESS_TOKEN");
-    public final static String INDEX_NAME = System.getenv("Sample_Index");
+    public final static String SUBSCRIPTION_ID = System.getenv("SUBSCRIPTION_ID");
+    public final static String INDEX_NAME = System.getenv("SAMPLE_INDEX");
 
     public static void main(String[] args) throws IOException {
         BingCommerceIngestion ingestionClient = createIngestionClient();
@@ -30,13 +24,23 @@ public class TSManagementAPISample {
     }
 
     private static void createScript(BingCommerceIngestion ingestionClient) throws IOException {
-        File file = new File("Defines a path to the content index on your local file system");
-        BufferedReader br = new BufferedReader(new FileReader(file));
-
-        String script = br.readLine();
-        br.close();
-        TransformationConfigResponse createScriptResponse = ingestionClient.createOrUpdateTransformationConfig(script,
-                TENANT_ID, INDEX_NAME);
+        BufferedReader reader = new BufferedReader(new FileReader("Path to the content index on your local file system"));
+        StringBuilder stringBuilder = new StringBuilder();
+        String line = null;
+        String ls = System.getProperty("line.separator");
+        
+        while ((line = reader.readLine()) != null)
+        {
+            stringBuilder.append(line);
+            stringBuilder.append(ls);
+        }
+        
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        reader.close();
+        String content = stringBuilder.toString();
+        
+        TransformationConfigResponse createScriptResponse = ingestionClient
+        .createOrUpdateTransformationConfig(content, TENANT_ID, INDEX_NAME);
     }
 
     private static void retrieveScript(BingCommerceIngestion ingestionClient) {
@@ -50,17 +54,35 @@ public class TSManagementAPISample {
     }
 
     private static void testTryoutTransfromationApi(BingCommerceIngestion ingestionClient) throws IOException {
-        File file = new File("Defines a path to the content index on your local file system");
-        BufferedReader br = new BufferedReader(new FileReader(file));
+        BufferedReader reader = new BufferedReader(new FileReader("Path to the content index on your local file system"));
+        StringBuilder stringBuilder = new StringBuilder();
+        String line = null;
+        String ls = System.getProperty("line.separator");
+        
+        while ((line = reader.readLine()) != null)
+        {
+            stringBuilder.append(line);
+            stringBuilder.append(ls);
+        }
+        
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        reader.close();
+        String script = stringBuilder.toString();
 
-        String script = br.readLine();
-        br.close();
+        BufferedReader bufferReader = new BufferedReader(new FileReader("Path to the content index on your local file system"));
+        StringBuilder stringBuilderObj = new StringBuilder();
+        String lines = null;
+        String lineSeapartor = System.getProperty("line.separator");
+        
+        while ((lines = bufferReader.readLine()) != null)
+        {
+            stringBuilderObj.append(lines);
+            stringBuilderObj.append(lineSeapartor);
+        }
 
-        File datafile = new File("Data file");
-        BufferedReader brData = new BufferedReader(new FileReader(datafile));
-
-        String data = brData.readLine();
-        brData.close();
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        bufferReader.close();
+        String data = stringBuilder.toString();
 
         TransformationConfigResponse createScriptResponse = ingestionClient.uploadTryOutConfig(script);
         TransformationTryoutResponse executeResponse = ingestionClient.executeTryOutConfig(data,
@@ -68,10 +90,10 @@ public class TSManagementAPISample {
     }
 
     private static BingCommerceIngestion createIngestionClient() {
-        System.out.format("Creating the ingestion client with access token %s.\n", ACCESS_TOKEN);
+        System.out.format("Creating the ingestion client with access token %s.\n", SUBSCRIPTION_ID);
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
-                .addInterceptor(new AccessTokenInterceptor(new SimpleAccessTokenProvider(ACCESS_TOKEN)));
+                .addInterceptor(new AccessTokenInterceptor(new SimpleAccessTokenProvider(SUBSCRIPTION_ID)));
         Retrofit.Builder retrofit = new Retrofit.Builder();
 
         return new BingCommerceIngestionImpl(httpClient, retrofit);
